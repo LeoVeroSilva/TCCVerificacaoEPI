@@ -2,11 +2,11 @@
 
 ## Useful Links and Information
 
-[Detecting personal protective equipment](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
+- [Detecting personal protective equipment](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
 
-[General API Documentation](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DetectProtectiveEquipment.html)
+- [General API Documentation](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DetectProtectiveEquipment.html)
 
-[Amazon Rekognition SDK for .NET](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Rekognition/MRekognitionDetectProtectiveEquipmentDetectProtectiveEquipmentRequest.html)
+- [Amazon Rekognition SDK for .NET](https://aws.amazon.com/sdk-for-net/)
 
 ## Definition of Requirements
 
@@ -20,3 +20,11 @@
 ### Technical Requirements
 
 1.
+
+## Amazon Rekognition
+
+### Personal Protective Equipment (PPE) 
+
+#### Known Limitation
+
+- Up to 15 persons max per image
