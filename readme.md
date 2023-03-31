@@ -2,11 +2,14 @@
 
 ## Useful Links and Information
 
-- [Detecting personal protective equipment](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
+- General
+  - [AWS SDKs and Tools Reference Guide](https://docs.aws.amazon.com/sdkref/latest/guide/overview.html) (Overall documentation about SDKs and Tools)
+- .NET
+  - [AWS SDK for .NET](https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/welcome.html)(Main page for AWS SDK for .NET)
+  - [AWS SDK for .NET Version 3 API Reference](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/Index.html)(THE BIBLE)
+  - [AWS SDK for .NET - GitHub](https://github.com/aws/aws-sdk-net)(General information and examples about Services with .NET)
+  - [Examples for AWS SDK for .NET 3.x - GitHub](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3)(Generic examples for .NET)
 
-- [General API Documentation](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DetectProtectiveEquipment.html)
-
-- [Amazon Rekognition SDK for .NET](https://aws.amazon.com/sdk-for-net/)
 
 ## Definition of Requirements
 
