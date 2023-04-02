@@ -40,6 +40,13 @@
 
 ## Amazon Rekognition
 
+### *Image* Object
+
+- Bytes: Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to DetectCustomLabels is 4MB.
+- Type: Base64-encoded binary data object
+- Lenth Constraints: Minimum length of 1. Maximum length of 5242880.
+- Required: No
+
 ### Personal Protective Equipment (PPE)
 
 API Method: DetectProtectiveEquipment 
