@@ -4,17 +4,16 @@ using System.Threading.Tasks;
 using Amazon;
 using Amazon.Rekognition;
 using Amazon.Rekognition.Model;
-
-class AWSClass
+class MyAWSClass
 {
-    static async Task Main(string[] args)
+    static async Task CallService()
     {
         var region = RegionEndpoint.USWest2; // Replace with the region where your Rekognition service is located
         var client = new AmazonRekognitionClient(region); // Create a new Rekognition client
 
         // Replace with the name of the image file you want to analyze
         var imagePath = "example.jpg";
-        var imageBytes = File.ReadAllBytes(imagePath);  
+        var imageBytes = File.ReadAllBytes(imagePath);
 
         var detectProtectiveEquipmentRequest = new DetectProtectiveEquipmentRequest
         {
