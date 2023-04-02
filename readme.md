@@ -12,7 +12,7 @@
 - Amazon Web Services (AWS)
   - [Amazon Rekognition](https://docs.aws.amazon.com/rekognition/latest/dg/what-is.html)
     - [Developer Guide - PDF](/docs/rekognition-dg.pdf)
-    - [Rekognition Custom Labels](/docs/Rekognition Custom Labels.pdf)
+    - [Rekognition Custom Labels](/docs/Rekognition%20Custom%20Labels.pdf)
     - [PPE Detection](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
   
 
