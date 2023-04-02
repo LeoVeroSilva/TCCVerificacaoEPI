@@ -36,7 +36,9 @@
 
 ## Amazon Rekognition
 
-### Personal Protective Equipment (PPE) 
+### Personal Protective Equipment (PPE)
+
+API Method: DetectProtectiveEquipment 
 
 #### Known Limitation
 
