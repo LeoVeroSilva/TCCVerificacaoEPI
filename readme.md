@@ -14,7 +14,8 @@
     - [Developer Guide - PDF](/docs/rekognition-dg.pdf)
     - [Rekognition Custom Labels](/docs/Rekognition%20Custom%20Labels.pdf)
     - [PPE Detection](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
-  
+- Nice to Know/Refer
+  -[Amazon Rekognition Workplace Safety](https://aws.amazon.com/rekognition/workplace-safety/)
 
 
 ## Definition of Requirements
