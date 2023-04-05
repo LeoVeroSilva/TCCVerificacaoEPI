@@ -54,6 +54,13 @@ namespace TCCVerificacaoEPI
             this.bSend = new System.Windows.Forms.Button();
             this.gbImage = new System.Windows.Forms.GroupBox();
             this.bConnectDisconnect = new System.Windows.Forms.Button();
+            this.cbHelmet = new System.Windows.Forms.CheckBox();
+            this.cbMask = new System.Windows.Forms.CheckBox();
+            this.cbGloves = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbMinConfLvl = new System.Windows.Forms.TextBox();
             this.gbImageSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.gbResponseType.SuspendLayout();
@@ -102,19 +109,20 @@ namespace TCCVerificacaoEPI
             this.pbImage.Location = new System.Drawing.Point(6, 12);
             this.pbImage.Name = "pbImage";
             this.pbImage.Size = new System.Drawing.Size(371, 433);
+            this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 3;
             this.pbImage.TabStop = false;
             // 
             // tbFilePath
             // 
-            this.tbFilePath.Location = new System.Drawing.Point(12, 68);
+            this.tbFilePath.Location = new System.Drawing.Point(65, 69);
             this.tbFilePath.Name = "tbFilePath";
-            this.tbFilePath.Size = new System.Drawing.Size(286, 20);
+            this.tbFilePath.Size = new System.Drawing.Size(249, 20);
             this.tbFilePath.TabIndex = 4;
             // 
             // bBrowse
             // 
-            this.bBrowse.Location = new System.Drawing.Point(304, 68);
+            this.bBrowse.Location = new System.Drawing.Point(320, 67);
             this.bBrowse.Name = "bBrowse";
             this.bBrowse.Size = new System.Drawing.Size(75, 23);
             this.bBrowse.TabIndex = 5;
@@ -178,7 +186,7 @@ namespace TCCVerificacaoEPI
             // 
             this.cbCOMPort.Enabled = false;
             this.cbCOMPort.FormattingEnabled = true;
-            this.cbCOMPort.Location = new System.Drawing.Point(12, 94);
+            this.cbCOMPort.Location = new System.Drawing.Point(98, 92);
             this.cbCOMPort.Name = "cbCOMPort";
             this.cbCOMPort.Size = new System.Drawing.Size(121, 21);
             this.cbCOMPort.TabIndex = 8;
@@ -202,6 +210,7 @@ namespace TCCVerificacaoEPI
             this.bSend.TabIndex = 10;
             this.bSend.Text = "Send";
             this.bSend.UseVisualStyleBackColor = true;
+            this.bSend.Click += new System.EventHandler(this.bSend_Click);
             // 
             // gbImage
             // 
@@ -216,7 +225,7 @@ namespace TCCVerificacaoEPI
             // bConnectDisconnect
             // 
             this.bConnectDisconnect.Enabled = false;
-            this.bConnectDisconnect.Location = new System.Drawing.Point(139, 94);
+            this.bConnectDisconnect.Location = new System.Drawing.Point(225, 92);
             this.bConnectDisconnect.Name = "bConnectDisconnect";
             this.bConnectDisconnect.Size = new System.Drawing.Size(75, 23);
             this.bConnectDisconnect.TabIndex = 11;
@@ -225,12 +234,91 @@ namespace TCCVerificacaoEPI
             this.bConnectDisconnect.Visible = false;
             this.bConnectDisconnect.Click += new System.EventHandler(this.bConnectDisconnect_Click);
             // 
+            // cbHelmet
+            // 
+            this.cbHelmet.AutoSize = true;
+            this.cbHelmet.Checked = true;
+            this.cbHelmet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbHelmet.Location = new System.Drawing.Point(425, 69);
+            this.cbHelmet.Name = "cbHelmet";
+            this.cbHelmet.Size = new System.Drawing.Size(59, 17);
+            this.cbHelmet.TabIndex = 12;
+            this.cbHelmet.Text = "Helmet";
+            this.cbHelmet.UseVisualStyleBackColor = true;
+            // 
+            // cbMask
+            // 
+            this.cbMask.AutoSize = true;
+            this.cbMask.Checked = true;
+            this.cbMask.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbMask.Location = new System.Drawing.Point(490, 69);
+            this.cbMask.Name = "cbMask";
+            this.cbMask.Size = new System.Drawing.Size(52, 17);
+            this.cbMask.TabIndex = 13;
+            this.cbMask.Text = "Mask";
+            this.cbMask.UseVisualStyleBackColor = true;
+            // 
+            // cbGloves
+            // 
+            this.cbGloves.AutoSize = true;
+            this.cbGloves.Checked = true;
+            this.cbGloves.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbGloves.Location = new System.Drawing.Point(549, 68);
+            this.cbGloves.Name = "cbGloves";
+            this.cbGloves.Size = new System.Drawing.Size(59, 17);
+            this.cbGloves.TabIndex = 14;
+            this.cbGloves.Text = "Gloves";
+            this.cbGloves.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 72);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 13);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "File Path";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 95);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 13);
+            this.label2.TabIndex = 16;
+            this.label2.Text = "Camera Source";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(422, 97);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(113, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Min. Confidence Level";
+            // 
+            // tbMinConfLvl
+            // 
+            this.tbMinConfLvl.Location = new System.Drawing.Point(541, 93);
+            this.tbMinConfLvl.Name = "tbMinConfLvl";
+            this.tbMinConfLvl.Size = new System.Drawing.Size(132, 20);
+            this.tbMinConfLvl.TabIndex = 18;
+            this.tbMinConfLvl.Text = "80";
+            this.tbMinConfLvl.TextChanged += new System.EventHandler(this.tbMinConfLvl_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 634);
+            this.Controls.Add(this.tbMinConfLvl);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.bConnectDisconnect);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbGloves);
+            this.Controls.Add(this.cbMask);
+            this.Controls.Add(this.cbHelmet);
             this.Controls.Add(this.gbImage);
             this.Controls.Add(this.bSend);
             this.Controls.Add(this.bImageAction);
@@ -271,6 +359,13 @@ namespace TCCVerificacaoEPI
         private System.Windows.Forms.Button bSend;
         private System.Windows.Forms.GroupBox gbImage;
         private System.Windows.Forms.Button bConnectDisconnect;
+        private System.Windows.Forms.CheckBox cbHelmet;
+        private System.Windows.Forms.CheckBox cbMask;
+        private System.Windows.Forms.CheckBox cbGloves;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbMinConfLvl;
     }
 }
 

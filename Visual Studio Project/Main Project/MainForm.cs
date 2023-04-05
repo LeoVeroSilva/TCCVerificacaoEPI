@@ -1,17 +1,12 @@
-﻿using Amazon.Rekognition.Model;
+﻿using Amazon;
 using Amazon.Rekognition;
-using Amazon;
+using Amazon.Rekognition.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 
@@ -20,24 +15,13 @@ namespace TCCVerificacaoEPI
     public partial class MainForm : Form
     {
         private MachineState programState;
+        private AmazonRekognitionClient client;
         public MainForm()
         {
             InitializeComponent();
             programState = new MachineState();
-        }
-
-        private static async Task<DetectProtectiveEquipmentResponse> DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
-        {
-            DetectProtectiveEquipmentRequest DetectPPERequest = new DetectProtectiveEquipmentRequest()
-            {
-                SummarizationAttributes = new ProtectiveEquipmentSummarizationAttributes
-                {
-                    MinConfidence = 0,
-                    RequiredEquipmentTypes = { "FACE_COVER", "HAND_COVER", "HEAD_COVER" },
-                },
-                Image = image
-            };
-            return client.DetectProtectiveEquipment(DetectPPERequest);
+            client = CreateAWSRekognitionClient();
+            PrintConsole("Program Initialized");
         }
 
         private static AmazonRekognitionClient CreateAWSRekognitionClient()
@@ -45,6 +29,24 @@ namespace TCCVerificacaoEPI
             AWSConfigs.AWSProfileName = "Developer";
             AmazonRekognitionClient client = new AmazonRekognitionClient();
             return client;
+        }
+
+        private async Task<DetectProtectiveEquipmentResponse> DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
+        {
+            List<string> RequiredEquipmentTypes = new List<string>();
+            if (cbHelmet.Checked) RequiredEquipmentTypes.Add("HEAD_COVER");
+            if (cbMask.Checked) RequiredEquipmentTypes.Add("FACE_COVER");
+            if (cbGloves.Checked) RequiredEquipmentTypes.Add("HAND_COVER");
+            DetectProtectiveEquipmentRequest DetectPPERequest = new DetectProtectiveEquipmentRequest()
+            {
+                SummarizationAttributes = new ProtectiveEquipmentSummarizationAttributes
+                {
+                    MinConfidence = float.Parse(tbMinConfLvl.Text),
+                    RequiredEquipmentTypes = RequiredEquipmentTypes,
+                },
+                Image = image
+            };
+            return client.DetectProtectiveEquipment(DetectPPERequest);
         }
 
         private static Amazon.Rekognition.Model.Image GetImageFromFile(string file)
@@ -60,16 +62,18 @@ namespace TCCVerificacaoEPI
             return image;
         }
 
-        private static void PrintReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
+        private void PrintReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
+            string returnmsg = "";
             foreach (ProtectiveEquipmentPerson Persons in DetectPPEResponse.Persons)
                 foreach (ProtectiveEquipmentBodyPart PPE in Persons.BodyParts)
-                    Console.WriteLine("Person {0} - BodyPart {1} : Confidence: {2}", Persons.Id, PPE.Name, PPE.Confidence);
+                    returnmsg += string.Format("Person {0} - BodyPart {1} : Confidence: {2} \n", Persons.Id, PPE.Name, PPE.Confidence);
+            rtResponse.Text = returnmsg;
         }
 
-        private static void PrintConsole(string msg)
+        private void PrintConsole(string msg)
         {
-            //print in console
+            rtConsole.Text = msg;
         }
 
         private void rb_camera_CheckedChanged(object sender, EventArgs e)
@@ -152,15 +156,8 @@ namespace TCCVerificacaoEPI
             switch (bImageAction.Text) 
             {
                 case "Load":
-                    try
-                    {
-                        Amazon.Rekognition.Model.Image image = GetImageFromFile(tbFilePath.Text);
-                        rtConsole.Text = "Image loaded";
-                    }
-                    catch
-                    {
-                        rtConsole.Text = "Not possible to load image";
-                    }
+                    pbImage.Image = System.Drawing.Image.FromFile(tbFilePath.Text);
+                    PrintConsole("Image loaded");
                     break;
                 case "Capture":
                     break;
@@ -168,8 +165,24 @@ namespace TCCVerificacaoEPI
                     break;
             }
         }
-    }
 
+        private async void bSend_Click(object sender, EventArgs e)
+        {
+            PrintConsole("Response Sent");
+            Amazon.Rekognition.Model.Image image = GetImageFromFile(tbFilePath.Text);
+            DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
+            PrintReturn(DetectPPEResponse);
+            PrintConsole("Response Received");
+        }
+
+        private void tbMinConfLvl_TextChanged(object sender, EventArgs e)
+        {
+            if (tbMinConfLvl.Text == "")
+            {
+                tbMinConfLvl.Text = "0";
+            }
+        }
+    }
     class MachineState
     {
 
