@@ -46,7 +46,7 @@ namespace TCCVerificacaoEPI
                 },
                 Image = image
             };
-            return client.DetectProtectiveEquipment(DetectPPERequest);
+            return client.DetectProtectiveEquipment(DetectPPERequest); 
         }
 
         private static Amazon.Rekognition.Model.Image GetImageFromFile(string file)
@@ -62,12 +62,24 @@ namespace TCCVerificacaoEPI
             return image;
         }
 
-        private void PrintReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
+        private void PrintRawReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
             string returnmsg = "";
-            foreach (ProtectiveEquipmentPerson Persons in DetectPPEResponse.Persons)
-                foreach (ProtectiveEquipmentBodyPart PPE in Persons.BodyParts)
-                    returnmsg += string.Format("Person {0} - BodyPart {1} : Confidence: {2} \n", Persons.Id, PPE.Name, PPE.Confidence);
+            foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
+            {
+                returnmsg += string.Format("Person: {0} | Confidence: {1}\n", person.Id, person.Confidence);
+                foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
+                { 
+                    returnmsg += string.Format(" -> BodyPart: {0} | Confidence: {1} \n", bodyPart.Name, bodyPart.Confidence);
+                    if(bodyPart.EquipmentDetections.Count > 0)
+                    {
+                        foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
+                            returnmsg += string.Format(" - - > {0} | Confidence: {1} \n", equipmentDetection.CoversBodyPart.Value);
+                    }
+                    else returnmsg += string.Format(" - - > Not Convered\n");
+
+                }
+            }
             rtResponse.Text = returnmsg;
         }
 
@@ -78,7 +90,18 @@ namespace TCCVerificacaoEPI
 
         private void rb_camera_CheckedChanged(object sender, EventArgs e)
         {
+            tbFilePath.Enabled = false;
+            tbFilePath.Visible = false;
+            tbFilePath.Text = null;
+            bBrowse.Enabled = false;
+            bBrowse.Visible = false;
 
+            cbCOMPort.Enabled = true;
+            cbCOMPort.Visible = true;
+            bConnectDisconnect.Enabled = true;
+            bConnectDisconnect.Visible = true;
+
+            bImageAction.Text = "Capture";
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
@@ -103,11 +126,6 @@ namespace TCCVerificacaoEPI
 
         private void rbFile_CheckedChanged(object sender, EventArgs e)
         {
-            
-        }
-
-        private void rbFile_Click(object sender, EventArgs e)
-        {
             cbCOMPort.Enabled = false;
             cbCOMPort.Visible = false;
             bConnectDisconnect.Enabled = false;
@@ -118,23 +136,7 @@ namespace TCCVerificacaoEPI
             bBrowse.Enabled = true;
             bBrowse.Visible = true;
 
-            bImageAction.Text = "Load"; 
-        }
-
-        private void rbCamera_Click(object sender, EventArgs e)
-        {
-            tbFilePath.Enabled = false;
-            tbFilePath.Visible = false;
-            tbFilePath.Text = null;
-            bBrowse.Enabled = false;
-            bBrowse.Visible = false;
-
-            cbCOMPort.Enabled = true;
-            cbCOMPort.Visible = true;
-            bConnectDisconnect.Enabled = true;
-            bConnectDisconnect.Visible = true;
-
-            bImageAction.Text = "Capture";
+            bImageAction.Text = "Load";
         }
 
         private void bConnectDisconnect_Click(object sender, EventArgs e)
@@ -171,16 +173,14 @@ namespace TCCVerificacaoEPI
             PrintConsole("Response Sent");
             Amazon.Rekognition.Model.Image image = GetImageFromFile(tbFilePath.Text);
             DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
-            PrintReturn(DetectPPEResponse);
+            PrintRawReturn(DetectPPEResponse);
             PrintConsole("Response Received");
         }
 
-        private void tbMinConfLvl_TextChanged(object sender, EventArgs e)
+        private void tbMinConfLvl_Leave(object sender, EventArgs e)
         {
-            if (tbMinConfLvl.Text == "")
-            {
-                tbMinConfLvl.Text = "0";
-            }
+            if (float.Parse(tbMinConfLvl.Text) < 50) tbMinConfLvl.Text = "50";
+            else if (float.Parse(tbMinConfLvl.Text) > 100) tbMinConfLvl.Text = "100";
         }
     }
     class MachineState

@@ -47,6 +47,7 @@ namespace TCCVerificacaoEPI
             this.rtResponse = new System.Windows.Forms.RichTextBox();
             this.rtConsole = new System.Windows.Forms.RichTextBox();
             this.gbResponseType = new System.Windows.Forms.GroupBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.rbValidation = new System.Windows.Forms.RadioButton();
             this.rbServiceResponse = new System.Windows.Forms.RadioButton();
             this.cbCOMPort = new System.Windows.Forms.ComboBox();
@@ -57,9 +58,9 @@ namespace TCCVerificacaoEPI
             this.cbHelmet = new System.Windows.Forms.CheckBox();
             this.cbMask = new System.Windows.Forms.CheckBox();
             this.cbGloves = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lFilePath = new System.Windows.Forms.Label();
+            this.lCameraSource = new System.Windows.Forms.Label();
+            this.lminConfiLvl = new System.Windows.Forms.Label();
             this.tbMinConfLvl = new System.Windows.Forms.TextBox();
             this.gbImageSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
@@ -79,7 +80,6 @@ namespace TCCVerificacaoEPI
             this.rbFile.Text = "File";
             this.rbFile.UseVisualStyleBackColor = true;
             this.rbFile.CheckedChanged += new System.EventHandler(this.rbFile_CheckedChanged);
-            this.rbFile.Click += new System.EventHandler(this.rbFile_Click);
             // 
             // rbCamera
             // 
@@ -91,7 +91,6 @@ namespace TCCVerificacaoEPI
             this.rbCamera.Text = "Camera";
             this.rbCamera.UseVisualStyleBackColor = true;
             this.rbCamera.CheckedChanged += new System.EventHandler(this.rb_camera_CheckedChanged);
-            this.rbCamera.Click += new System.EventHandler(this.rbCamera_Click);
             // 
             // gbImageSource
             // 
@@ -151,18 +150,29 @@ namespace TCCVerificacaoEPI
             // gbResponseType
             // 
             this.gbResponseType.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.gbResponseType.Controls.Add(this.radioButton1);
             this.gbResponseType.Controls.Add(this.rbValidation);
             this.gbResponseType.Controls.Add(this.rbServiceResponse);
             this.gbResponseType.Location = new System.Drawing.Point(425, 12);
             this.gbResponseType.Name = "gbResponseType";
-            this.gbResponseType.Size = new System.Drawing.Size(200, 50);
+            this.gbResponseType.Size = new System.Drawing.Size(232, 50);
             this.gbResponseType.TabIndex = 3;
             this.gbResponseType.TabStop = false;
+            // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(83, 19);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(91, 17);
+            this.radioButton1.TabIndex = 2;
+            this.radioButton1.Text = "Bounding Box";
+            this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // rbValidation
             // 
             this.rbValidation.AutoSize = true;
-            this.rbValidation.Location = new System.Drawing.Point(124, 19);
+            this.rbValidation.Location = new System.Drawing.Point(6, 19);
             this.rbValidation.Name = "rbValidation";
             this.rbValidation.Size = new System.Drawing.Size(71, 17);
             this.rbValidation.TabIndex = 1;
@@ -173,12 +183,12 @@ namespace TCCVerificacaoEPI
             // 
             this.rbServiceResponse.AutoSize = true;
             this.rbServiceResponse.Checked = true;
-            this.rbServiceResponse.Location = new System.Drawing.Point(6, 19);
+            this.rbServiceResponse.Location = new System.Drawing.Point(180, 19);
             this.rbServiceResponse.Name = "rbServiceResponse";
-            this.rbServiceResponse.Size = new System.Drawing.Size(112, 17);
+            this.rbServiceResponse.Size = new System.Drawing.Size(47, 17);
             this.rbServiceResponse.TabIndex = 0;
             this.rbServiceResponse.TabStop = true;
-            this.rbServiceResponse.Text = "Service Response";
+            this.rbServiceResponse.Text = "Raw";
             this.rbServiceResponse.UseVisualStyleBackColor = true;
             this.rbServiceResponse.CheckedChanged += new System.EventHandler(this.rbServiceResponse_CheckedChanged);
             // 
@@ -270,32 +280,32 @@ namespace TCCVerificacaoEPI
             this.cbGloves.Text = "Gloves";
             this.cbGloves.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // lFilePath
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 72);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(48, 13);
-            this.label1.TabIndex = 15;
-            this.label1.Text = "File Path";
+            this.lFilePath.AutoSize = true;
+            this.lFilePath.Location = new System.Drawing.Point(12, 72);
+            this.lFilePath.Name = "lFilePath";
+            this.lFilePath.Size = new System.Drawing.Size(48, 13);
+            this.lFilePath.TabIndex = 15;
+            this.lFilePath.Text = "File Path";
             // 
-            // label2
+            // lCameraSource
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 95);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 13);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "Camera Source";
+            this.lCameraSource.AutoSize = true;
+            this.lCameraSource.Location = new System.Drawing.Point(12, 95);
+            this.lCameraSource.Name = "lCameraSource";
+            this.lCameraSource.Size = new System.Drawing.Size(80, 13);
+            this.lCameraSource.TabIndex = 16;
+            this.lCameraSource.Text = "Camera Source";
             // 
-            // label3
+            // lminConfiLvl
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(422, 97);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 13);
-            this.label3.TabIndex = 17;
-            this.label3.Text = "Min. Confidence Level";
+            this.lminConfiLvl.AutoSize = true;
+            this.lminConfiLvl.Location = new System.Drawing.Point(422, 97);
+            this.lminConfiLvl.Name = "lminConfiLvl";
+            this.lminConfiLvl.Size = new System.Drawing.Size(113, 13);
+            this.lminConfiLvl.TabIndex = 17;
+            this.lminConfiLvl.Text = "Min. Confidence Level";
             // 
             // tbMinConfLvl
             // 
@@ -304,7 +314,7 @@ namespace TCCVerificacaoEPI
             this.tbMinConfLvl.Size = new System.Drawing.Size(132, 20);
             this.tbMinConfLvl.TabIndex = 18;
             this.tbMinConfLvl.Text = "80";
-            this.tbMinConfLvl.TextChanged += new System.EventHandler(this.tbMinConfLvl_TextChanged);
+            this.tbMinConfLvl.Leave += new System.EventHandler(this.tbMinConfLvl_Leave);
             // 
             // MainForm
             // 
@@ -312,10 +322,10 @@ namespace TCCVerificacaoEPI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 634);
             this.Controls.Add(this.tbMinConfLvl);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lminConfiLvl);
+            this.Controls.Add(this.lCameraSource);
             this.Controls.Add(this.bConnectDisconnect);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lFilePath);
             this.Controls.Add(this.cbGloves);
             this.Controls.Add(this.cbMask);
             this.Controls.Add(this.cbHelmet);
@@ -362,10 +372,11 @@ namespace TCCVerificacaoEPI
         private System.Windows.Forms.CheckBox cbHelmet;
         private System.Windows.Forms.CheckBox cbMask;
         private System.Windows.Forms.CheckBox cbGloves;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lFilePath;
+        private System.Windows.Forms.Label lCameraSource;
+        private System.Windows.Forms.Label lminConfiLvl;
         private System.Windows.Forms.TextBox tbMinConfLvl;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }
 
