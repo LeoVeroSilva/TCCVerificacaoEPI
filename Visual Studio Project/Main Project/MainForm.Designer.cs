@@ -44,12 +44,12 @@ namespace TCCVerificacaoEPI
             this.pbImage = new System.Windows.Forms.PictureBox();
             this.tbFilePath = new System.Windows.Forms.TextBox();
             this.bBrowse = new System.Windows.Forms.Button();
-            this.rtResponse = new System.Windows.Forms.RichTextBox();
-            this.rtConsole = new System.Windows.Forms.RichTextBox();
+            this.rtbRawReturn = new System.Windows.Forms.RichTextBox();
+            this.rtbConsole = new System.Windows.Forms.RichTextBox();
             this.gbResponseType = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.rbValidation = new System.Windows.Forms.RadioButton();
-            this.rbServiceResponse = new System.Windows.Forms.RadioButton();
+            this.rbResponseBoundingBox = new System.Windows.Forms.RadioButton();
+            this.rbResponseValidation = new System.Windows.Forms.RadioButton();
+            this.rbRawResponse = new System.Windows.Forms.RadioButton();
             this.cbCOMPort = new System.Windows.Forms.ComboBox();
             this.bImageAction = new System.Windows.Forms.Button();
             this.bSend = new System.Windows.Forms.Button();
@@ -62,6 +62,7 @@ namespace TCCVerificacaoEPI
             this.lCameraSource = new System.Windows.Forms.Label();
             this.lminConfiLvl = new System.Windows.Forms.Label();
             this.tbMinConfLvl = new System.Windows.Forms.TextBox();
+            this.rtbResponseValidation = new System.Windows.Forms.RichTextBox();
             this.gbImageSource.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             this.gbResponseType.SuspendLayout();
@@ -129,30 +130,30 @@ namespace TCCVerificacaoEPI
             this.bBrowse.UseVisualStyleBackColor = true;
             this.bBrowse.Click += new System.EventHandler(this.bBrowse_Click);
             // 
-            // rtResponse
+            // rtRawReturn
             // 
-            this.rtResponse.Location = new System.Drawing.Point(425, 121);
-            this.rtResponse.Name = "rtResponse";
-            this.rtResponse.ReadOnly = true;
-            this.rtResponse.Size = new System.Drawing.Size(363, 451);
-            this.rtResponse.TabIndex = 6;
-            this.rtResponse.Text = "";
+            this.rtbRawReturn.Location = new System.Drawing.Point(425, 121);
+            this.rtbRawReturn.Name = "rtRawReturn";
+            this.rtbRawReturn.ReadOnly = true;
+            this.rtbRawReturn.Size = new System.Drawing.Size(363, 451);
+            this.rtbRawReturn.TabIndex = 6;
+            this.rtbRawReturn.Text = "";
             // 
             // rtConsole
             // 
-            this.rtConsole.Location = new System.Drawing.Point(12, 578);
-            this.rtConsole.Name = "rtConsole";
-            this.rtConsole.ReadOnly = true;
-            this.rtConsole.Size = new System.Drawing.Size(776, 21);
-            this.rtConsole.TabIndex = 7;
-            this.rtConsole.Text = "";
+            this.rtbConsole.Location = new System.Drawing.Point(12, 578);
+            this.rtbConsole.Name = "rtConsole";
+            this.rtbConsole.ReadOnly = true;
+            this.rtbConsole.Size = new System.Drawing.Size(776, 21);
+            this.rtbConsole.TabIndex = 7;
+            this.rtbConsole.Text = "";
             // 
             // gbResponseType
             // 
             this.gbResponseType.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.gbResponseType.Controls.Add(this.radioButton1);
-            this.gbResponseType.Controls.Add(this.rbValidation);
-            this.gbResponseType.Controls.Add(this.rbServiceResponse);
+            this.gbResponseType.Controls.Add(this.rbResponseBoundingBox);
+            this.gbResponseType.Controls.Add(this.rbResponseValidation);
+            this.gbResponseType.Controls.Add(this.rbRawResponse);
             this.gbResponseType.Location = new System.Drawing.Point(425, 12);
             this.gbResponseType.Name = "gbResponseType";
             this.gbResponseType.Size = new System.Drawing.Size(232, 50);
@@ -161,36 +162,36 @@ namespace TCCVerificacaoEPI
             // 
             // radioButton1
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(83, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(91, 17);
-            this.radioButton1.TabIndex = 2;
-            this.radioButton1.Text = "Bounding Box";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rbResponseBoundingBox.AutoSize = true;
+            this.rbResponseBoundingBox.Location = new System.Drawing.Point(83, 19);
+            this.rbResponseBoundingBox.Name = "radioButton1";
+            this.rbResponseBoundingBox.Size = new System.Drawing.Size(91, 17);
+            this.rbResponseBoundingBox.TabIndex = 2;
+            this.rbResponseBoundingBox.Text = "Bounding Box";
+            this.rbResponseBoundingBox.UseVisualStyleBackColor = true;
             // 
             // rbValidation
             // 
-            this.rbValidation.AutoSize = true;
-            this.rbValidation.Location = new System.Drawing.Point(6, 19);
-            this.rbValidation.Name = "rbValidation";
-            this.rbValidation.Size = new System.Drawing.Size(71, 17);
-            this.rbValidation.TabIndex = 1;
-            this.rbValidation.Text = "Validation";
-            this.rbValidation.UseVisualStyleBackColor = true;
+            this.rbResponseValidation.AutoSize = true;
+            this.rbResponseValidation.Location = new System.Drawing.Point(6, 19);
+            this.rbResponseValidation.Name = "rbValidation";
+            this.rbResponseValidation.Size = new System.Drawing.Size(71, 17);
+            this.rbResponseValidation.TabIndex = 1;
+            this.rbResponseValidation.Text = "Validation";
+            this.rbResponseValidation.UseVisualStyleBackColor = true;
             // 
             // rbServiceResponse
             // 
-            this.rbServiceResponse.AutoSize = true;
-            this.rbServiceResponse.Checked = true;
-            this.rbServiceResponse.Location = new System.Drawing.Point(180, 19);
-            this.rbServiceResponse.Name = "rbServiceResponse";
-            this.rbServiceResponse.Size = new System.Drawing.Size(47, 17);
-            this.rbServiceResponse.TabIndex = 0;
-            this.rbServiceResponse.TabStop = true;
-            this.rbServiceResponse.Text = "Raw";
-            this.rbServiceResponse.UseVisualStyleBackColor = true;
-            this.rbServiceResponse.CheckedChanged += new System.EventHandler(this.rbServiceResponse_CheckedChanged);
+            this.rbRawResponse.AutoSize = true;
+            this.rbRawResponse.Checked = true;
+            this.rbRawResponse.Location = new System.Drawing.Point(180, 19);
+            this.rbRawResponse.Name = "rbServiceResponse";
+            this.rbRawResponse.Size = new System.Drawing.Size(47, 17);
+            this.rbRawResponse.TabIndex = 0;
+            this.rbRawResponse.TabStop = true;
+            this.rbRawResponse.Text = "Raw";
+            this.rbRawResponse.UseVisualStyleBackColor = true;
+            this.rbRawResponse.CheckedChanged += new System.EventHandler(this.rbServiceResponse_CheckedChanged);
             // 
             // cbCOMPort
             // 
@@ -316,11 +317,21 @@ namespace TCCVerificacaoEPI
             this.tbMinConfLvl.Text = "80";
             this.tbMinConfLvl.Leave += new System.EventHandler(this.tbMinConfLvl_Leave);
             // 
+            // rtbResponseValidation
+            // 
+            this.rtbResponseValidation.Location = new System.Drawing.Point(425, 119);
+            this.rtbResponseValidation.Name = "rtbResponseValidation";
+            this.rtbResponseValidation.ReadOnly = true;
+            this.rtbResponseValidation.Size = new System.Drawing.Size(363, 451);
+            this.rtbResponseValidation.TabIndex = 19;
+            this.rtbResponseValidation.Text = "";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 634);
+            this.Controls.Add(this.rtbResponseValidation);
             this.Controls.Add(this.tbMinConfLvl);
             this.Controls.Add(this.lminConfiLvl);
             this.Controls.Add(this.lCameraSource);
@@ -334,8 +345,8 @@ namespace TCCVerificacaoEPI
             this.Controls.Add(this.bImageAction);
             this.Controls.Add(this.cbCOMPort);
             this.Controls.Add(this.gbResponseType);
-            this.Controls.Add(this.rtConsole);
-            this.Controls.Add(this.rtResponse);
+            this.Controls.Add(this.rtbConsole);
+            this.Controls.Add(this.rtbRawReturn);
             this.Controls.Add(this.bBrowse);
             this.Controls.Add(this.tbFilePath);
             this.Controls.Add(this.gbImageSource);
@@ -359,11 +370,11 @@ namespace TCCVerificacaoEPI
         private System.Windows.Forms.PictureBox pbImage;
         private System.Windows.Forms.TextBox tbFilePath;
         private System.Windows.Forms.Button bBrowse;
-        private System.Windows.Forms.RichTextBox rtResponse;
-        private System.Windows.Forms.RichTextBox rtConsole;
+        private System.Windows.Forms.RichTextBox rtbRawReturn;
+        private System.Windows.Forms.RichTextBox rtbConsole;
         private System.Windows.Forms.GroupBox gbResponseType;
-        private System.Windows.Forms.RadioButton rbValidation;
-        private System.Windows.Forms.RadioButton rbServiceResponse;
+        private System.Windows.Forms.RadioButton rbResponseValidation;
+        private System.Windows.Forms.RadioButton rbRawResponse;
         private System.Windows.Forms.ComboBox cbCOMPort;
         private System.Windows.Forms.Button bImageAction;
         private System.Windows.Forms.Button bSend;
@@ -376,7 +387,8 @@ namespace TCCVerificacaoEPI
         private System.Windows.Forms.Label lCameraSource;
         private System.Windows.Forms.Label lminConfiLvl;
         private System.Windows.Forms.TextBox tbMinConfLvl;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton rbResponseBoundingBox;
+        private System.Windows.Forms.RichTextBox rtbResponseValidation;
     }
 }
 

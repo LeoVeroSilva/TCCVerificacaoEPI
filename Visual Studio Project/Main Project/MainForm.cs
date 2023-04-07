@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 
 
@@ -16,15 +18,20 @@ namespace TCCVerificacaoEPI
     {
         private MachineState programState;
         private AmazonRekognitionClient client;
+        private string rawReturn;
+        private string validationReturn;
+        private System.Drawing.Image boudingBoxReturn;
+        
         public MainForm()
         {
+            PrintConsole("Initializing Program");
             InitializeComponent();
             programState = new MachineState();
             client = CreateAWSRekognitionClient();
             PrintConsole("Program Initialized");
         }
 
-        private static AmazonRekognitionClient CreateAWSRekognitionClient()
+        private AmazonRekognitionClient CreateAWSRekognitionClient()
         {
             AWSConfigs.AWSProfileName = "Developer";
             AmazonRekognitionClient client = new AmazonRekognitionClient();
@@ -49,7 +56,7 @@ namespace TCCVerificacaoEPI
             return client.DetectProtectiveEquipment(DetectPPERequest); 
         }
 
-        private static Amazon.Rekognition.Model.Image GetImageFromFile(string file)
+        private Amazon.Rekognition.Model.Image GetImageFromFile(string file)
         {
             Amazon.Rekognition.Model.Image image = new Amazon.Rekognition.Model.Image();
             using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
@@ -62,30 +69,47 @@ namespace TCCVerificacaoEPI
             return image;
         }
 
+        private void ProcessReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
+        {
+            PrintRawReturn(DetectPPEResponse);
+            printReturnValidatin(DetectPPEResponse);
+            DrawReturnBoudingBox(DetectPPEResponse);
+        }
+
+        private void printReturnValidatin(DetectProtectiveEquipmentResponse DetectPPEResponse) { }
+        private void DrawReturnBoudingBox(DetectProtectiveEquipmentResponse DetectPPEResponse) { }
+
         private void PrintRawReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
-            string returnmsg = "";
+            string RawReturnMsg = "";
             foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
             {
-                returnmsg += string.Format("Person: {0} | Confidence: {1}\n", person.Id, person.Confidence);
+                RawReturnMsg += string.Format("Person: {0} | Confidence: {1}\n", person.Id, person.Confidence);
                 foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
-                { 
-                    returnmsg += string.Format(" -> BodyPart: {0} | Confidence: {1} \n", bodyPart.Name, bodyPart.Confidence);
-                    if(bodyPart.EquipmentDetections.Count > 0)
+                {
+                    RawReturnMsg += string.Format("   > BodyPart: {0} | Confidence: {1} \n", bodyPart.Name, bodyPart.Confidence);
+                    if (bodyPart.EquipmentDetections.Count > 0)
                     {
                         foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
-                            returnmsg += string.Format(" - - > {0} | Confidence: {1} \n", equipmentDetection.CoversBodyPart.Value);
+                        {
+                            string msg = "";
+                            if (equipmentDetection.CoversBodyPart.Value)
+                                msg = string.Format("      - Equipament detected & Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
+                            else
+                                msg = string.Format("      - Equipament detected & NOT Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
+                            msg += msg;
+                        }
                     }
-                    else returnmsg += string.Format(" - - > Not Convered\n");
-
+                    else RawReturnMsg += string.Format("      - No Equipament detected\n");
                 }
+                RawReturnMsg += "----------------------------------------------------\n";
             }
-            rtResponse.Text = returnmsg;
+            rtbRawReturn.Text = RawReturnMsg;
         }
 
         private void PrintConsole(string msg)
         {
-            rtConsole.Text = msg;
+            rtbConsole.Text = msg;
         }
 
         private void rb_camera_CheckedChanged(object sender, EventArgs e)
@@ -102,11 +126,6 @@ namespace TCCVerificacaoEPI
             bConnectDisconnect.Visible = true;
 
             bImageAction.Text = "Capture";
-        }
-
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
         }
 
         private void bBrowse_Click(object sender, EventArgs e)
@@ -158,8 +177,9 @@ namespace TCCVerificacaoEPI
             switch (bImageAction.Text) 
             {
                 case "Load":
+                    PrintConsole("Loading Image");
                     pbImage.Image = System.Drawing.Image.FromFile(tbFilePath.Text);
-                    PrintConsole("Image loaded");
+                    PrintConsole("Image Loaded");
                     break;
                 case "Capture":
                     break;
@@ -173,8 +193,9 @@ namespace TCCVerificacaoEPI
             PrintConsole("Response Sent");
             Amazon.Rekognition.Model.Image image = GetImageFromFile(tbFilePath.Text);
             DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
-            PrintRawReturn(DetectPPEResponse);
-            PrintConsole("Response Received");
+            PrintConsole("Processing Return");
+            ProcessReturn(DetectPPEResponse);
+            PrintConsole("Return Processed");
         }
 
         private void tbMinConfLvl_Leave(object sender, EventArgs e)
