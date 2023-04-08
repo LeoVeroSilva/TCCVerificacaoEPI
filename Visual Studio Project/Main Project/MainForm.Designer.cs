@@ -130,19 +130,19 @@ namespace TCCVerificacaoEPI
             this.bBrowse.UseVisualStyleBackColor = true;
             this.bBrowse.Click += new System.EventHandler(this.bBrowse_Click);
             // 
-            // rtRawReturn
+            // rtbRawReturn
             // 
             this.rtbRawReturn.Location = new System.Drawing.Point(425, 121);
-            this.rtbRawReturn.Name = "rtRawReturn";
+            this.rtbRawReturn.Name = "rtbRawReturn";
             this.rtbRawReturn.ReadOnly = true;
             this.rtbRawReturn.Size = new System.Drawing.Size(363, 451);
             this.rtbRawReturn.TabIndex = 6;
             this.rtbRawReturn.Text = "";
             // 
-            // rtConsole
+            // rtbConsole
             // 
             this.rtbConsole.Location = new System.Drawing.Point(12, 578);
-            this.rtbConsole.Name = "rtConsole";
+            this.rtbConsole.Name = "rtbConsole";
             this.rtbConsole.ReadOnly = true;
             this.rtbConsole.Size = new System.Drawing.Size(776, 21);
             this.rtbConsole.TabIndex = 7;
@@ -160,38 +160,37 @@ namespace TCCVerificacaoEPI
             this.gbResponseType.TabIndex = 3;
             this.gbResponseType.TabStop = false;
             // 
-            // radioButton1
+            // rbResponseBoundingBox
             // 
             this.rbResponseBoundingBox.AutoSize = true;
             this.rbResponseBoundingBox.Location = new System.Drawing.Point(83, 19);
-            this.rbResponseBoundingBox.Name = "radioButton1";
+            this.rbResponseBoundingBox.Name = "rbResponseBoundingBox";
             this.rbResponseBoundingBox.Size = new System.Drawing.Size(91, 17);
             this.rbResponseBoundingBox.TabIndex = 2;
             this.rbResponseBoundingBox.Text = "Bounding Box";
             this.rbResponseBoundingBox.UseVisualStyleBackColor = true;
             // 
-            // rbValidation
+            // rbResponseValidation
             // 
             this.rbResponseValidation.AutoSize = true;
             this.rbResponseValidation.Location = new System.Drawing.Point(6, 19);
-            this.rbResponseValidation.Name = "rbValidation";
+            this.rbResponseValidation.Name = "rbResponseValidation";
             this.rbResponseValidation.Size = new System.Drawing.Size(71, 17);
             this.rbResponseValidation.TabIndex = 1;
             this.rbResponseValidation.Text = "Validation";
             this.rbResponseValidation.UseVisualStyleBackColor = true;
             // 
-            // rbServiceResponse
+            // rbRawResponse
             // 
             this.rbRawResponse.AutoSize = true;
             this.rbRawResponse.Checked = true;
             this.rbRawResponse.Location = new System.Drawing.Point(180, 19);
-            this.rbRawResponse.Name = "rbServiceResponse";
+            this.rbRawResponse.Name = "rbRawResponse";
             this.rbRawResponse.Size = new System.Drawing.Size(47, 17);
             this.rbRawResponse.TabIndex = 0;
             this.rbRawResponse.TabStop = true;
             this.rbRawResponse.Text = "Raw";
             this.rbRawResponse.UseVisualStyleBackColor = true;
-            this.rbRawResponse.CheckedChanged += new System.EventHandler(this.rbServiceResponse_CheckedChanged);
             // 
             // cbCOMPort
             // 
@@ -319,12 +318,14 @@ namespace TCCVerificacaoEPI
             // 
             // rtbResponseValidation
             // 
+            this.rtbResponseValidation.Enabled = false;
             this.rtbResponseValidation.Location = new System.Drawing.Point(425, 119);
             this.rtbResponseValidation.Name = "rtbResponseValidation";
             this.rtbResponseValidation.ReadOnly = true;
             this.rtbResponseValidation.Size = new System.Drawing.Size(363, 451);
             this.rtbResponseValidation.TabIndex = 19;
             this.rtbResponseValidation.Text = "";
+            this.rtbResponseValidation.Visible = false;
             // 
             // MainForm
             // 

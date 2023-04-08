@@ -16,7 +16,6 @@ namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
-        private MachineState programState;
         private AmazonRekognitionClient client;
         private string rawReturn;
         private string validationReturn;
@@ -24,9 +23,13 @@ namespace TCCVerificacaoEPI
         
         public MainForm()
         {
-            PrintConsole("Initializing Program");
             InitializeComponent();
-            programState = new MachineState();
+            MyInitilize();
+        }
+
+        private void MyInitilize()
+        {
+            PrintConsole("Initializing Program");
             client = CreateAWSRekognitionClient();
             PrintConsole("Program Initialized");
         }
@@ -112,6 +115,7 @@ namespace TCCVerificacaoEPI
             rtbConsole.Text = msg;
         }
 
+        #region Methods for Image Source Radion Button
         private void rb_camera_CheckedChanged(object sender, EventArgs e)
         {
             tbFilePath.Enabled = false;
@@ -126,21 +130,6 @@ namespace TCCVerificacaoEPI
             bConnectDisconnect.Visible = true;
 
             bImageAction.Text = "Capture";
-        }
-
-        private void bBrowse_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                tbFilePath.Text = openFileDialog.FileName;
-            }
-        }
-
-        private void rbServiceResponse_CheckedChanged(object sender, EventArgs e)
-        {
-            
         }
 
         private void rbFile_CheckedChanged(object sender, EventArgs e)
@@ -158,9 +147,27 @@ namespace TCCVerificacaoEPI
             bImageAction.Text = "Load";
         }
 
+        #endregion
+
+        #region Methods for Response Presentation Radion Button
+
+        #endregion
+
+        #region Methods for Buttons Events
+
+        private void bBrowse_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                tbFilePath.Text = openFileDialog.FileName;
+            }
+        }
+
         private void bConnectDisconnect_Click(object sender, EventArgs e)
         {
-            if (bConnectDisconnect.Text == "Connect") 
+            if (bConnectDisconnect.Text == "Connect")
             {
                 // try to connect to COM Port
                 // If successfull, bring video to PictureBox and change label
@@ -174,7 +181,7 @@ namespace TCCVerificacaoEPI
 
         private void bImageAction_Click(object sender, EventArgs e)
         {
-            switch (bImageAction.Text) 
+            switch (bImageAction.Text)
             {
                 case "Load":
                     PrintConsole("Loading Image");
@@ -198,35 +205,16 @@ namespace TCCVerificacaoEPI
             PrintConsole("Return Processed");
         }
 
+        #endregion
+
+        #region Methods for Text Box Events
         private void tbMinConfLvl_Leave(object sender, EventArgs e)
         {
             if (float.Parse(tbMinConfLvl.Text) < 50) tbMinConfLvl.Text = "50";
             else if (float.Parse(tbMinConfLvl.Text) > 100) tbMinConfLvl.Text = "100";
         }
+
+        #endregion
+
     }
-    class MachineState
-    {
-
-        public enum enumState
-        {
-            Start
-        }
-
-        public enum enumImageSourceType
-        {
-            File,
-            Camera
-        }
-
-        public enum enumResponseDisplayType
-        {
-            Raw,
-            Resume
-        }
-
-        public int state { get; set; }
-        public enumImageSourceType ImageSourceType { get; set; }
-        public enumResponseDisplayType ResponseDisplayType { get; set; }
-    }
-
 }
