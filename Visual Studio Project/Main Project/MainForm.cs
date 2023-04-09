@@ -10,23 +10,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-
-
 namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
         private AmazonRekognitionClient client;
-        private string rawReturn;
-        private string validationReturn;
-        private System.Drawing.Image boudingBoxReturn;
-        
+
         public MainForm()
         {
             InitializeComponent();
             MyInitilize();
         }
 
+        #region General Methods
         private void MyInitilize()
         {
             PrintConsole("Initializing Program");
@@ -56,7 +52,7 @@ namespace TCCVerificacaoEPI
                 },
                 Image = image
             };
-            return client.DetectProtectiveEquipment(DetectPPERequest); 
+            return client.DetectProtectiveEquipment(DetectPPERequest);
         }
 
         private Amazon.Rekognition.Model.Image GetImageFromFile(string file)
@@ -79,8 +75,49 @@ namespace TCCVerificacaoEPI
             DrawReturnBoudingBox(DetectPPEResponse);
         }
 
-        private void printReturnValidatin(DetectProtectiveEquipmentResponse DetectPPEResponse) { }
-        private void DrawReturnBoudingBox(DetectProtectiveEquipmentResponse DetectPPEResponse) { }
+        private void MyDrawRectangle(System.Drawing.Pen pen, System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize)
+        {
+            RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
+            graphics.DrawRectangle(pen, realBoundingBox.left, realBoundingBox.top, realBoundingBox.width, realBoundingBox.height);
+        }
+
+        #endregion
+
+        #region Methods for Print Text/Images
+        private void printReturnValidatin(DetectProtectiveEquipmentResponse DetectPPEResponse) 
+        { 
+
+        }
+
+        private void DrawReturnBoudingBox(DetectProtectiveEquipmentResponse DetectPPEResponse) 
+        {
+            Bitmap bitmap = new Bitmap(pbImage.Image);
+            Graphics graphics = Graphics.FromImage(bitmap);
+
+            Pen personPen = new Pen(Color.Green, 3);
+            Pen coveredBodyPartPen = new Pen(Color.Yellow, 3);
+            Pen equipamentPen = new Pen(Color.Red, 3);
+            
+            foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
+            {
+                MyDrawRectangle(personPen, graphics, person.BoundingBox, bitmap.Size);
+                foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
+                {
+                    if (bodyPart.EquipmentDetections.Count > 0)
+                    {
+                        foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
+                        {
+                            // Body Part Equipament
+                            if (equipmentDetection.CoversBodyPart.Value) 
+                                MyDrawRectangle(coveredBodyPartPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
+                            else
+                                MyDrawRectangle(equipamentPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
+                        }
+                    }
+                }
+            }
+            pbBoudingBox.Image = bitmap;
+        }
 
         private void PrintRawReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
@@ -100,7 +137,7 @@ namespace TCCVerificacaoEPI
                                 msg = string.Format("      - Equipament detected & Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
                             else
                                 msg = string.Format("      - Equipament detected & NOT Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
-                            msg += msg;
+                            RawReturnMsg += msg;
                         }
                     }
                     else RawReturnMsg += string.Format("      - No Equipament detected\n");
@@ -115,42 +152,101 @@ namespace TCCVerificacaoEPI
             rtbConsole.Text = msg;
         }
 
+        #endregion
+
         #region Methods for Image Source Radion Button
         private void rb_camera_CheckedChanged(object sender, EventArgs e)
         {
-            tbFilePath.Enabled = false;
-            tbFilePath.Visible = false;
-            tbFilePath.Text = null;
-            bBrowse.Enabled = false;
-            bBrowse.Visible = false;
+            if (rbCamera.Checked == true)
+            {
+                tbFilePath.Enabled = false;
+                tbFilePath.Visible = false;
+                tbFilePath.Text = null;
+                bBrowse.Enabled = false;
+                bBrowse.Visible = false;
+                lFilePath.Enabled = false;
+                lFilePath.Visible = false;
 
-            cbCOMPort.Enabled = true;
-            cbCOMPort.Visible = true;
-            bConnectDisconnect.Enabled = true;
-            bConnectDisconnect.Visible = true;
+                cbCOMPort.Enabled = true;
+                cbCOMPort.Visible = true;
+                bConnectDisconnect.Enabled = true;
+                bConnectDisconnect.Visible = true;
+                lCameraSource.Enabled = true;
+                lCameraSource.Visible = true;
 
-            bImageAction.Text = "Capture";
+                bImageAction.Text = "Capture";
+            }
         }
 
         private void rbFile_CheckedChanged(object sender, EventArgs e)
         {
-            cbCOMPort.Enabled = false;
-            cbCOMPort.Visible = false;
-            bConnectDisconnect.Enabled = false;
-            bConnectDisconnect.Visible = false;
+            if(rbFile.Checked == true)
+            {
+                cbCOMPort.Enabled = false;
+                cbCOMPort.Visible = false;
+                bConnectDisconnect.Enabled = false;
+                bConnectDisconnect.Visible = false;
+                lCameraSource.Enabled = false;
+                lCameraSource.Visible = false;
 
-            tbFilePath.Enabled = true;
-            tbFilePath.Visible = true;
-            bBrowse.Enabled = true;
-            bBrowse.Visible = true;
+                tbFilePath.Enabled = true;
+                tbFilePath.Visible = true;
+                bBrowse.Enabled = true;
+                bBrowse.Visible = true;
+                lFilePath.Enabled = true;
+                lFilePath.Visible = true;
 
-            bImageAction.Text = "Load";
+                bImageAction.Text = "Load";
+            }
         }
 
         #endregion
 
         #region Methods for Response Presentation Radion Button
+        private void rbResponseValidation_CheckedChanged(object sender, EventArgs e)
+        {
+            if(rbResponseValidation.Checked)
+            {
+                rtbRawReturn.Enabled = false;
+                rtbRawReturn.Visible = false;
 
+                rtbResponseValidation.Enabled = true;
+                rtbResponseValidation.Visible = true;
+
+                pbBoudingBox.Enabled = false;
+                pbBoudingBox.Visible = false;
+            }
+        }
+
+        private void rbResponseBoundingBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbResponseBoundingBox.Checked)
+            {
+                rtbRawReturn.Enabled = false;
+                rtbRawReturn.Visible = false;
+
+                rtbResponseValidation.Enabled = false;
+                rtbResponseValidation.Visible = false;
+
+                pbBoudingBox.Enabled = true;
+                pbBoudingBox.Visible = true;
+            }
+        }
+
+        private void rbRawResponse_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbRawResponse.Checked)
+            {
+                rtbRawReturn.Enabled = true;
+                rtbRawReturn.Visible = true;
+
+                rtbResponseValidation.Enabled = false;
+                rtbResponseValidation.Visible = false;
+
+                pbBoudingBox.Enabled = false;
+                pbBoudingBox.Visible = false;
+            }
+        }
         #endregion
 
         #region Methods for Buttons Events
@@ -215,6 +311,20 @@ namespace TCCVerificacaoEPI
         }
 
         #endregion
+    }
 
+    public class RealBoudingBox 
+    {
+        public int width,
+                   height,
+                   top,
+                   left;
+        public RealBoudingBox(System.Drawing.Size imageSize, BoundingBox boundingBox) 
+        {
+            width = (int)(boundingBox.Width * imageSize.Width);
+            height = (int)(boundingBox.Height * imageSize.Height);
+            top = (int)(boundingBox.Top * imageSize.Height);
+            left = (int)(boundingBox.Left * imageSize.Width);
+        }
     }
 }
