@@ -81,21 +81,21 @@ namespace TCCVerificacaoEPI
             this.rbFile.Checked = true;
             this.rbFile.Location = new System.Drawing.Point(6, 19);
             this.rbFile.Name = "rbFile";
-            this.rbFile.Size = new System.Drawing.Size(41, 17);
+            this.rbFile.Size = new System.Drawing.Size(61, 17);
             this.rbFile.TabIndex = 0;
             this.rbFile.TabStop = true;
-            this.rbFile.Text = "File";
+            this.rbFile.Text = "Arquivo";
             this.rbFile.UseVisualStyleBackColor = true;
             this.rbFile.CheckedChanged += new System.EventHandler(this.rbFile_CheckedChanged);
             // 
             // rbCamera
             // 
             this.rbCamera.AutoSize = true;
-            this.rbCamera.Location = new System.Drawing.Point(53, 19);
+            this.rbCamera.Location = new System.Drawing.Point(73, 19);
             this.rbCamera.Name = "rbCamera";
             this.rbCamera.Size = new System.Drawing.Size(61, 17);
             this.rbCamera.TabIndex = 1;
-            this.rbCamera.Text = "Camera";
+            this.rbCamera.Text = "Câmera";
             this.rbCamera.UseVisualStyleBackColor = true;
             this.rbCamera.CheckedChanged += new System.EventHandler(this.rb_camera_CheckedChanged);
             // 
@@ -106,7 +106,7 @@ namespace TCCVerificacaoEPI
             this.gbImageSource.Controls.Add(this.rbFile);
             this.gbImageSource.Location = new System.Drawing.Point(12, 12);
             this.gbImageSource.Name = "gbImageSource";
-            this.gbImageSource.Size = new System.Drawing.Size(121, 50);
+            this.gbImageSource.Size = new System.Drawing.Size(135, 50);
             this.gbImageSource.TabIndex = 2;
             this.gbImageSource.TabStop = false;
             // 
@@ -123,7 +123,7 @@ namespace TCCVerificacaoEPI
             this.bBrowse.Name = "bBrowse";
             this.bBrowse.Size = new System.Drawing.Size(75, 23);
             this.bBrowse.TabIndex = 5;
-            this.bBrowse.Text = "Browse";
+            this.bBrowse.Text = "Pesquisar";
             this.bBrowse.UseVisualStyleBackColor = true;
             this.bBrowse.Click += new System.EventHandler(this.bBrowse_Click);
             // 
@@ -150,7 +150,7 @@ namespace TCCVerificacaoEPI
             // 
             this.cbCameraDevices.Enabled = false;
             this.cbCameraDevices.FormattingEnabled = true;
-            this.cbCameraDevices.Location = new System.Drawing.Point(98, 92);
+            this.cbCameraDevices.Location = new System.Drawing.Point(65, 92);
             this.cbCameraDevices.Name = "cbCameraDevices";
             this.cbCameraDevices.Size = new System.Drawing.Size(121, 21);
             this.cbCameraDevices.TabIndex = 8;
@@ -162,7 +162,7 @@ namespace TCCVerificacaoEPI
             this.bImageAction.Name = "bImageAction";
             this.bImageAction.Size = new System.Drawing.Size(75, 23);
             this.bImageAction.TabIndex = 9;
-            this.bImageAction.Text = "Load";
+            this.bImageAction.Text = "Carregar";
             this.bImageAction.UseVisualStyleBackColor = true;
             this.bImageAction.Click += new System.EventHandler(this.bImageAction_Click);
             // 
@@ -172,18 +172,18 @@ namespace TCCVerificacaoEPI
             this.bSend.Name = "bSend";
             this.bSend.Size = new System.Drawing.Size(75, 23);
             this.bSend.TabIndex = 10;
-            this.bSend.Text = "Send";
+            this.bSend.Text = "Enviar";
             this.bSend.UseVisualStyleBackColor = true;
             this.bSend.Click += new System.EventHandler(this.bSend_Click);
             // 
             // bConnectDisconnect
             // 
             this.bConnectDisconnect.Enabled = false;
-            this.bConnectDisconnect.Location = new System.Drawing.Point(225, 92);
+            this.bConnectDisconnect.Location = new System.Drawing.Point(192, 92);
             this.bConnectDisconnect.Name = "bConnectDisconnect";
             this.bConnectDisconnect.Size = new System.Drawing.Size(75, 23);
             this.bConnectDisconnect.TabIndex = 11;
-            this.bConnectDisconnect.Text = "Connect";
+            this.bConnectDisconnect.Text = "Conectar";
             this.bConnectDisconnect.UseVisualStyleBackColor = true;
             this.bConnectDisconnect.Visible = false;
             this.bConnectDisconnect.Click += new System.EventHandler(this.bConnectDisconnect_Click);
@@ -195,9 +195,9 @@ namespace TCCVerificacaoEPI
             this.cbHelmet.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbHelmet.Location = new System.Drawing.Point(6, 19);
             this.cbHelmet.Name = "cbHelmet";
-            this.cbHelmet.Size = new System.Drawing.Size(59, 17);
+            this.cbHelmet.Size = new System.Drawing.Size(72, 17);
             this.cbHelmet.TabIndex = 12;
-            this.cbHelmet.Text = "Helmet";
+            this.cbHelmet.Text = "Capacete";
             this.cbHelmet.UseVisualStyleBackColor = true;
             // 
             // cbMask
@@ -205,11 +205,11 @@ namespace TCCVerificacaoEPI
             this.cbMask.AutoSize = true;
             this.cbMask.Checked = true;
             this.cbMask.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbMask.Location = new System.Drawing.Point(71, 19);
+            this.cbMask.Location = new System.Drawing.Point(84, 19);
             this.cbMask.Name = "cbMask";
-            this.cbMask.Size = new System.Drawing.Size(52, 17);
+            this.cbMask.Size = new System.Drawing.Size(67, 17);
             this.cbMask.TabIndex = 13;
-            this.cbMask.Text = "Mask";
+            this.cbMask.Text = "Máscara";
             this.cbMask.UseVisualStyleBackColor = true;
             // 
             // cbGloves
@@ -217,11 +217,11 @@ namespace TCCVerificacaoEPI
             this.cbGloves.AutoSize = true;
             this.cbGloves.Checked = true;
             this.cbGloves.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbGloves.Location = new System.Drawing.Point(129, 19);
+            this.cbGloves.Location = new System.Drawing.Point(157, 19);
             this.cbGloves.Name = "cbGloves";
-            this.cbGloves.Size = new System.Drawing.Size(59, 17);
+            this.cbGloves.Size = new System.Drawing.Size(55, 17);
             this.cbGloves.TabIndex = 14;
-            this.cbGloves.Text = "Gloves";
+            this.cbGloves.Text = "Luvas";
             this.cbGloves.UseVisualStyleBackColor = true;
             // 
             // lFilePath
@@ -229,18 +229,18 @@ namespace TCCVerificacaoEPI
             this.lFilePath.AutoSize = true;
             this.lFilePath.Location = new System.Drawing.Point(12, 72);
             this.lFilePath.Name = "lFilePath";
-            this.lFilePath.Size = new System.Drawing.Size(48, 13);
+            this.lFilePath.Size = new System.Drawing.Size(43, 13);
             this.lFilePath.TabIndex = 15;
-            this.lFilePath.Text = "File Path";
+            this.lFilePath.Text = "Arquivo";
             // 
             // lCameraSource
             // 
             this.lCameraSource.AutoSize = true;
             this.lCameraSource.Location = new System.Drawing.Point(12, 95);
             this.lCameraSource.Name = "lCameraSource";
-            this.lCameraSource.Size = new System.Drawing.Size(80, 13);
+            this.lCameraSource.Size = new System.Drawing.Size(43, 13);
             this.lCameraSource.TabIndex = 16;
-            this.lCameraSource.Text = "Camera Source";
+            this.lCameraSource.Text = "Câmera";
             this.lCameraSource.Visible = false;
             // 
             // lminConfiLvl
@@ -248,13 +248,13 @@ namespace TCCVerificacaoEPI
             this.lminConfiLvl.AutoSize = true;
             this.lminConfiLvl.Location = new System.Drawing.Point(3, 46);
             this.lminConfiLvl.Name = "lminConfiLvl";
-            this.lminConfiLvl.Size = new System.Drawing.Size(113, 13);
+            this.lminConfiLvl.Size = new System.Drawing.Size(92, 13);
             this.lminConfiLvl.TabIndex = 17;
-            this.lminConfiLvl.Text = "Min. Confidence Level";
+            this.lminConfiLvl.Text = "Confiânça mínima";
             // 
             // tbMinConfLvl
             // 
-            this.tbMinConfLvl.Location = new System.Drawing.Point(122, 42);
+            this.tbMinConfLvl.Location = new System.Drawing.Point(101, 42);
             this.tbMinConfLvl.Name = "tbMinConfLvl";
             this.tbMinConfLvl.Size = new System.Drawing.Size(132, 20);
             this.tbMinConfLvl.TabIndex = 18;
@@ -310,7 +310,7 @@ namespace TCCVerificacaoEPI
             this.groupBox3.Size = new System.Drawing.Size(700, 700);
             this.groupBox3.TabIndex = 6;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Bounding Box";
+            this.groupBox3.Text = "Delimitadores";
             // 
             // groupBox1
             // 
@@ -321,7 +321,7 @@ namespace TCCVerificacaoEPI
             this.groupBox1.Size = new System.Drawing.Size(383, 418);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Raw";
+            this.groupBox1.Text = "Bruto";
             // 
             // groupBox2
             // 
@@ -332,7 +332,7 @@ namespace TCCVerificacaoEPI
             this.groupBox2.Size = new System.Drawing.Size(383, 282);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Validation";
+            this.groupBox2.Text = "Validação";
             // 
             // groupBox4
             // 
@@ -353,9 +353,9 @@ namespace TCCVerificacaoEPI
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(24, 117);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(36, 13);
+            this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 22;
-            this.label1.Text = "Image";
+            this.label1.Text = "Imagem";
             // 
             // MainForm
             // 

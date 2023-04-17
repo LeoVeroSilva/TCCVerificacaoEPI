@@ -30,10 +30,10 @@ namespace TCCVerificacaoEPI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            PrintConsole("Initializing Program");
+            PrintConsole("Inicializando");
             client = CreateAWSRekognitionClient();
             ListCameras();
-            PrintConsole("Program Initialized");
+            PrintConsole("Inicializado");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -158,15 +158,15 @@ namespace TCCVerificacaoEPI
             string validationMsg = "";
             foreach (int person in DetectPPEResponse.Summary.PersonsWithRequiredEquipment)
             {
-                validationMsg += string.Format("Person: {0} Authorized\n", person);
+                validationMsg += string.Format("Pessoa: {0} Autorizadad\n", person);
             }
             foreach (int person in DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment)
             {
-                validationMsg += string.Format("Person: {0} NOT Authorized\n", person);
+                validationMsg += string.Format("Pessoa: {0} NÃO Autorizadad\n", person);
             }
             foreach (int person in DetectPPEResponse.Summary.PersonsIndeterminate)
             {
-                validationMsg += string.Format("Person: {0} is Indeterminate\n", person);
+                validationMsg += string.Format("Pessoa: {0} é ideterminável\n", person);
             }
             rtbResponseValidation.Text = validationMsg;
         }
@@ -208,22 +208,38 @@ namespace TCCVerificacaoEPI
             string RawReturnMsg = "";
             foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
             {
-                RawReturnMsg += string.Format("Person: {0} | Confidence: {1}\n", person.Id, person.Confidence);
+                RawReturnMsg += string.Format("Pessoa: {0} | Confiânça: {1}%\n", person.Id, person.Confidence);
                 foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
                 {
-                    RawReturnMsg += string.Format("   > BodyPart: {0} | Confidence: {1} \n", bodyPart.Name, bodyPart.Confidence);
+                    string bodyPartName = "";
+                    switch (bodyPart.Name)
+                    {
+                        case "HEAD":
+                            bodyPartName = "CABEÇA";
+                            break;
+                        case "LEFT_HAND":
+                            bodyPartName = "M.ESQUERDA";
+                            break;
+                        case "RIGHT_HAND":
+                            bodyPartName = "M.DIREITA";
+                            break;
+                        case "FACE":
+                            bodyPartName = "ROSTO";
+                            break;
+                    }
+                    RawReturnMsg += string.Format("   > Parte do corpo: {0} | Confiânça: {1}% \n", bodyPartName, bodyPart.Confidence);
                     if (bodyPart.EquipmentDetections.Count > 0)
                     {
                         foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
                         {
-                            RawReturnMsg += string.Format("      - Equipament Detected | Confidence: {0} \n", equipmentDetection.Confidence); ;
+                            RawReturnMsg += string.Format("      - Equipamento Detectado | Confiânça: {0}% \n", equipmentDetection.Confidence); ;
                             if (equipmentDetection.CoversBodyPart.Value)
-                                RawReturnMsg += string.Format("         * Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
+                                RawReturnMsg += string.Format("         * Cobrindo | Confiânça: {0}% \n", equipmentDetection.CoversBodyPart.Confidence);
                             else
-                                RawReturnMsg += string.Format("         * NOT Covering | Confidence: {0} \n", equipmentDetection.CoversBodyPart.Confidence);
+                                RawReturnMsg += string.Format("         * NÃO Cobrindo | Confiânça: {0}% \n", equipmentDetection.CoversBodyPart.Confidence);
                         }
                     }
-                    else RawReturnMsg += string.Format("      - No Equipament detected\n");
+                    else RawReturnMsg += string.Format("      - Nenhum Equipamento Detectado\n");
                 }
                 RawReturnMsg += "----------------------------------------------------\n";
             }
@@ -259,7 +275,7 @@ namespace TCCVerificacaoEPI
 
                 pbImage.Image = null;
 
-                bImageAction.Text = "Capture";
+                bImageAction.Text = "Capturar";
             }
         }
 
@@ -282,11 +298,11 @@ namespace TCCVerificacaoEPI
                 lFilePath.Visible = true;
 
                 StopCamera();
-                bConnectDisconnect.Text = "Connect";
+                bConnectDisconnect.Text = "Conectar";
 
                 pbImage.Image = null;
 
-                bImageAction.Text = "Load";
+                bImageAction.Text = "Carregar";
             }
         }
 
@@ -306,16 +322,16 @@ namespace TCCVerificacaoEPI
 
         private void bConnectDisconnect_Click(object sender, EventArgs e)
         {
-            if (bConnectDisconnect.Text == "Connect")
+            if (bConnectDisconnect.Text == "Conectar")
             {
-                bConnectDisconnect.Text = "Disconnect";
+                bConnectDisconnect.Text = "Disconectar";
                 ConnectCamera();
                 StartCamera();
             }
             else
             {
-                bConnectDisconnect.Text = "Connect";
-                bConnectDisconnect.Text = "Capture";
+                bConnectDisconnect.Text = "Conectar";
+                bConnectDisconnect.Text = "Capturar";
                 StopCamera();
                 pbImage.Image = null;
             }
@@ -325,40 +341,40 @@ namespace TCCVerificacaoEPI
         {
             switch (bImageAction.Text)
             {
-                case "Load":
-                    PrintConsole("Loading Image");
+                case "Carregar":
+                    PrintConsole("Carregando Imagem");
                     pbImage.Image = System.Drawing.Image.FromFile(tbFilePath.Text);
-                    PrintConsole("Image Loaded");
+                    PrintConsole("Imagem Carregada");
                     break;
-                case "Capture":
+                case "Capturar":
                     if (videoCaptureDevice != null)
                     {
                         System.Drawing.Image image = pbImage.Image;
                         StopCamera();
                         pbImage.Image = image;
-                        bImageAction.Text = "Reset";
+                        bImageAction.Text = "Resetar";
                     }
                     break;
-                case "Reset":
+                case "Resetar":
                     pbImage.Image = null;
                     StartCamera();
-                    bImageAction.Text = "Capture";
+                    bImageAction.Text = "Capturar";
                     break;
             }
         }
 
         private async void bSend_Click(object sender, EventArgs e)
         {
-            PrintConsole("Response Sent");
+            PrintConsole("Enviando");
             Amazon.Rekognition.Model.Image image;
             if (rbFile.Checked)
                 image = GetImageFromFile(tbFilePath.Text);
             else
                 image = GetImageFromPictureBox();
             DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
-            PrintConsole("Processing Return");
+            PrintConsole("Processando Retorno");
             ProcessReturn(DetectPPEResponse);
-            PrintConsole("Return Processed");
+            PrintConsole("Retorno Processado");
         }
 
         #endregion
