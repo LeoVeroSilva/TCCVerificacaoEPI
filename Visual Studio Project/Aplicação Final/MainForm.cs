@@ -17,6 +17,11 @@ namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
+        float minConfiance = 80;//%
+        bool validateHelmet = true;
+        bool validateMask = true;
+        bool validateGloves = true;
+
         private AmazonRekognitionClient client;
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
         VideoCaptureDevice videoCaptureDevice;
@@ -30,10 +35,8 @@ namespace TCCVerificacaoEPI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            PrintConsole("Inicializando");
             client = CreateAWSRekognitionClient();
             ListCameras();
-            PrintConsole("Inicializado");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -72,32 +75,19 @@ namespace TCCVerificacaoEPI
         private async Task<DetectProtectiveEquipmentResponse> DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
         {
             List<string> RequiredEquipmentTypes = new List<string>();
-            if (cbHelmet.Checked) RequiredEquipmentTypes.Add("HEAD_COVER");
-            if (cbMask.Checked) RequiredEquipmentTypes.Add("FACE_COVER");
-            if (cbGloves.Checked) RequiredEquipmentTypes.Add("HAND_COVER");
+            if (validateHelmet) RequiredEquipmentTypes.Add("HEAD_COVER");
+            if (validateMask) RequiredEquipmentTypes.Add("FACE_COVER");
+            if (validateGloves) RequiredEquipmentTypes.Add("HAND_COVER");
             DetectProtectiveEquipmentRequest DetectPPERequest = new DetectProtectiveEquipmentRequest()
             {
                 SummarizationAttributes = new ProtectiveEquipmentSummarizationAttributes
                 {
-                    MinConfidence = float.Parse(tbMinConfLvl.Text),
+                    MinConfidence = minConfiance,
                     RequiredEquipmentTypes = RequiredEquipmentTypes,
                 },
                 Image = image
             };
             return client.DetectProtectiveEquipment(DetectPPERequest);
-        }
-
-        private Amazon.Rekognition.Model.Image GetImageFromFile(string file)
-        {
-            Amazon.Rekognition.Model.Image image = new Amazon.Rekognition.Model.Image();
-            using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-            {
-                byte[] data = null;
-                data = new byte[fs.Length];
-                fs.Read(data, 0, (int)fs.Length);
-                image.Bytes = new MemoryStream(data);
-            }
-            return image;
         }
 
         private Amazon.Rekognition.Model.Image GetImageFromPictureBox()
@@ -111,7 +101,6 @@ namespace TCCVerificacaoEPI
 
         private void ProcessReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
-            PrintRawReturn(DetectPPEResponse);
             printReturnValidatin(DetectPPEResponse);
             DrawReturnBoudingBox(DetectPPEResponse);
         }
@@ -121,8 +110,8 @@ namespace TCCVerificacaoEPI
             RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
             graphics.DrawRectangle(pen, realBoundingBox.left, realBoundingBox.top, realBoundingBox.width, realBoundingBox.height);
         }
-
-        private void MyDrawString(System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize, String msg)
+        
+        private void DrawConfidence(System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize, float confidence, Color color)
         {
             int imageWidth = imageSize.Width;
             int imageHeight = imageSize.Height;
@@ -130,11 +119,11 @@ namespace TCCVerificacaoEPI
             int fontSize = (int)(Math.Min(imageWidth, imageHeight) * fontRatio);
 
             Font font = new Font(FontFamily.GenericSansSerif, fontSize);
-            Brush brush = new SolidBrush(Color.Green);
-           
+            Brush brush = new SolidBrush(color);
+
             RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
             System.Drawing.PointF point = new System.Drawing.PointF(realBoundingBox.left, realBoundingBox.top);
-            graphics.DrawString(msg, font, brush, point);
+            graphics.DrawString(confidence.ToString(), font, brush, point);
         }
 
         private void ListCameras()
@@ -176,14 +165,14 @@ namespace TCCVerificacaoEPI
             Bitmap bitmap = new Bitmap(pbImage.Image);
             Graphics graphics = Graphics.FromImage(bitmap);
 
-            Pen personPen = new Pen(Color.Green, 3);
-            Pen coveredBodyPartPen = new Pen(Color.Yellow, 3);
+            Pen personPen = new Pen(Color.Yellow, 3);
+            Pen coveredBodyPartPen = new Pen(Color.Green, 3);
             Pen equipamentPen = new Pen(Color.Red, 3);
 
             foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
             {
                 MyDrawRectangle(personPen, graphics, person.BoundingBox, bitmap.Size);
-                MyDrawString(graphics, person.BoundingBox, bitmap.Size,  person.Id.ToString());
+                DrawConfidence(graphics, person.BoundingBox, bitmap.Size, person.Confidence, personPen.Color);
                 foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
                 {
                     //MyDrawRectangle(bodyPartPen, graphics, bodyPart., bitmap.Size);
@@ -192,10 +181,16 @@ namespace TCCVerificacaoEPI
                         foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
                         {
                             // Body Part Equipament
-                            if (equipmentDetection.CoversBodyPart.Value) 
+                            if (equipmentDetection.CoversBodyPart.Value)
+                            {
                                 MyDrawRectangle(coveredBodyPartPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
+                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, coveredBodyPartPen.Color);
+                            }
                             else
+                            {
                                 MyDrawRectangle(equipamentPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
+                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, equipamentPen.Color);
+                            } 
                         }
                     }
                 }
@@ -203,122 +198,9 @@ namespace TCCVerificacaoEPI
             pbBoudingBox.Image = bitmap;
         }
 
-        private void PrintRawReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
-        {
-            string RawReturnMsg = "";
-            foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
-            {
-                RawReturnMsg += string.Format("Pessoa: {0} | Confiânça: {1}%\n", person.Id, person.Confidence);
-                foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
-                {
-                    string bodyPartName = "";
-                    switch (bodyPart.Name)
-                    {
-                        case "HEAD":
-                            bodyPartName = "CABEÇA";
-                            break;
-                        case "LEFT_HAND":
-                            bodyPartName = "M.ESQUERDA";
-                            break;
-                        case "RIGHT_HAND":
-                            bodyPartName = "M.DIREITA";
-                            break;
-                        case "FACE":
-                            bodyPartName = "ROSTO";
-                            break;
-                    }
-                    RawReturnMsg += string.Format("   > Parte do corpo: {0} | Confiânça: {1}% \n", bodyPartName, bodyPart.Confidence);
-                    if (bodyPart.EquipmentDetections.Count > 0)
-                    {
-                        foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
-                        {
-                            RawReturnMsg += string.Format("      - Equipamento Detectado | Confiânça: {0}% \n", equipmentDetection.Confidence); ;
-                            if (equipmentDetection.CoversBodyPart.Value)
-                                RawReturnMsg += string.Format("         * Cobrindo | Confiânça: {0}% \n", equipmentDetection.CoversBodyPart.Confidence);
-                            else
-                                RawReturnMsg += string.Format("         * NÃO Cobrindo | Confiânça: {0}% \n", equipmentDetection.CoversBodyPart.Confidence);
-                        }
-                    }
-                    else RawReturnMsg += string.Format("      - Nenhum Equipamento Detectado\n");
-                }
-                RawReturnMsg += "----------------------------------------------------\n";
-            }
-            rtbRawReturn.Text = RawReturnMsg;
-        }
-
-        private void PrintConsole(string msg)
-        {
-            rtbConsole.Text = msg;
-        }
-
-        #endregion
-
-        #region Methods for Image Source Radion Button
-        private void rb_camera_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rbCamera.Checked == true)
-            {
-                tbFilePath.Enabled = false;
-                tbFilePath.Visible = false;
-                tbFilePath.Text = null;
-                bBrowse.Enabled = false;
-                bBrowse.Visible = false;
-                lFilePath.Enabled = false;
-                lFilePath.Visible = false;
-
-                cbCameraDevices.Enabled = true;
-                cbCameraDevices.Visible = true;
-                bConnectDisconnect.Enabled = true;
-                bConnectDisconnect.Visible = true;
-                lCameraSource.Enabled = true;
-                lCameraSource.Visible = true;
-
-                pbImage.Image = null;
-
-                bImageAction.Text = "Capturar";
-            }
-        }
-
-        private void rbFile_CheckedChanged(object sender, EventArgs e)
-        {
-            if(rbFile.Checked == true)
-            {
-                cbCameraDevices.Enabled = false;
-                cbCameraDevices.Visible = false;
-                bConnectDisconnect.Enabled = false;
-                bConnectDisconnect.Visible = false;
-                lCameraSource.Enabled = false;
-                lCameraSource.Visible = false;
-
-                tbFilePath.Enabled = true;
-                tbFilePath.Visible = true;
-                bBrowse.Enabled = true;
-                bBrowse.Visible = true;
-                lFilePath.Enabled = true;
-                lFilePath.Visible = true;
-
-                StopCamera();
-                bConnectDisconnect.Text = "Conectar";
-
-                pbImage.Image = null;
-
-                bImageAction.Text = "Carregar";
-            }
-        }
-
         #endregion
 
         #region Methods for Buttons Events
-
-        private void bBrowse_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                tbFilePath.Text = openFileDialog.FileName;
-            }
-        }
 
         private void bConnectDisconnect_Click(object sender, EventArgs e)
         {
@@ -341,11 +223,6 @@ namespace TCCVerificacaoEPI
         {
             switch (bImageAction.Text)
             {
-                case "Carregar":
-                    PrintConsole("Carregando Imagem");
-                    pbImage.Image = System.Drawing.Image.FromFile(tbFilePath.Text);
-                    PrintConsole("Imagem Carregada");
-                    break;
                 case "Capturar":
                     if (videoCaptureDevice != null)
                     {
@@ -365,29 +242,13 @@ namespace TCCVerificacaoEPI
 
         private async void bSend_Click(object sender, EventArgs e)
         {
-            PrintConsole("Enviando");
             Amazon.Rekognition.Model.Image image;
-            if (rbFile.Checked)
-                image = GetImageFromFile(tbFilePath.Text);
-            else
-                image = GetImageFromPictureBox();
+            image = GetImageFromPictureBox();
             DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
-            PrintConsole("Processando Retorno");
             ProcessReturn(DetectPPEResponse);
-            PrintConsole("Retorno Processado");
         }
 
         #endregion
-
-        #region Methods for Text Box Events
-        private void tbMinConfLvl_Leave(object sender, EventArgs e)
-        {
-            if (float.Parse(tbMinConfLvl.Text) < 50) tbMinConfLvl.Text = "50";
-            else if (float.Parse(tbMinConfLvl.Text) > 100) tbMinConfLvl.Text = "100";
-        }
-
-        #endregion
-
     }
 
     public class RealBoudingBox 

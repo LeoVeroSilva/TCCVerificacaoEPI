@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCCVerificacaoEPI", "TCCVerificacaoEPI.csproj", "{5D688643-267D-4C75-883A-8B4E503A6148}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCCVerificacaoEPITeste", "TCCVerificacaoEPITeste.csproj", "{5D688643-267D-4C75-883A-8B4E503A6148}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
