@@ -3,6 +3,7 @@ using Amazon.Rekognition;
 using Amazon.Rekognition.Model;
 using System;
 using System.Collections.Generic;
+using System.Timers;
 using System.ComponentModel;
 using System.IO;
 using System.Text;
@@ -17,7 +18,7 @@ namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
-        float minConfiance = 80;//%
+        float minConfiance = 80;//% (50 - 100)
         bool validateHelmet = true;
         bool validateMask = true;
         bool validateGloves = true;
@@ -25,6 +26,8 @@ namespace TCCVerificacaoEPI
         private AmazonRekognitionClient client;
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
         VideoCaptureDevice videoCaptureDevice;
+        System.Timers.Timer timer = new System.Timers.Timer();
+        Boolean timerRunning = false;
 
         public MainForm()
         {
@@ -35,6 +38,7 @@ namespace TCCVerificacaoEPI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            setTimer();
             client = CreateAWSRekognitionClient();
             ListCameras();
         }
@@ -63,6 +67,25 @@ namespace TCCVerificacaoEPI
         {
             videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[cbCameraDevices.SelectedIndex].MonikerString);
             videoCaptureDevice.NewFrame += CameraNewFrame;
+        }
+
+        private void setTimer()
+        {
+            timer.Interval = 3000;
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = false;
+        }
+
+        private void startTimer()
+        {
+            timerRunning = true;
+            timer.Start();
+        }
+
+        private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            timerRunning = false;
+            timer.Stop();
         }
 
         private AmazonRekognitionClient CreateAWSRekognitionClient()
@@ -226,6 +249,8 @@ namespace TCCVerificacaoEPI
                 case "Capturar":
                     if (videoCaptureDevice != null)
                     {
+                        startTimer();
+                        while (timerRunning);
                         System.Drawing.Image image = pbImage.Image;
                         StopCamera();
                         pbImage.Image = image;
