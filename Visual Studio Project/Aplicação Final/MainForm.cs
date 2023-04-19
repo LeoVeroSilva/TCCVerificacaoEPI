@@ -19,15 +19,16 @@ namespace TCCVerificacaoEPI
     public partial class MainForm : Form
     {
         float minConfiance = 80;//% (50 - 100)
+        int takePictureTimer = 3000;
         bool validateHelmet = true;
         bool validateMask = true;
         bool validateGloves = true;
+
 
         private AmazonRekognitionClient client;
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
         VideoCaptureDevice videoCaptureDevice;
         System.Timers.Timer timer = new System.Timers.Timer();
-        Boolean timerRunning = false;
 
         public MainForm()
         {
@@ -71,20 +72,28 @@ namespace TCCVerificacaoEPI
 
         private void setTimer()
         {
-            timer.Interval = 3000;
+            timer.Interval = takePictureTimer;
             timer.Elapsed += OnTimedEvent;
             timer.AutoReset = false;
         }
 
         private void startTimer()
         {
-            timerRunning = true;
+            bImageAction.Enabled = false;
+            bSend.Enabled = false;
+            bConnectDisconnect.Enabled = false;
             timer.Start();
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            timerRunning = false;
+            System.Drawing.Image image = pbImage.Image;
+            StopCamera();
+            pbImage.Image = image;
+            bImageAction.Enabled = Enabled;
+            bSend.Enabled = Enabled;
+            bConnectDisconnect.Enabled = Enabled;
+            bImageAction.Text = "Resetar";
             timer.Stop();
         }
 
@@ -250,11 +259,6 @@ namespace TCCVerificacaoEPI
                     if (videoCaptureDevice != null)
                     {
                         startTimer();
-                        while (timerRunning);
-                        System.Drawing.Image image = pbImage.Image;
-                        StopCamera();
-                        pbImage.Image = image;
-                        bImageAction.Text = "Resetar";
                     }
                     break;
                 case "Resetar":
