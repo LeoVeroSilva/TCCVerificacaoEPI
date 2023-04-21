@@ -13,22 +13,26 @@ using System.Drawing;
 using System.Management;
 using AForge.Video;
 using AForge.Video.DirectShow;
+using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
-        float minConfiance = 80;//% (50 - 100)
-        int takePictureTimer = 3000;
-        bool validateHelmet = true;
-        bool validateMask = true;
-        bool validateGloves = true;
-
+        // Variaveis de controle - Essas variaiveis podém ser modificadas para alterar o funcionamento do programa
+        float minConfiance = 80; // Confiança mínima aceitável, de 50 a 100 (%)
+        int captureInterval = 3; // Tempo de espera após pressionamento do botão de captura (em segundo)
+        bool validateHelmet = true; // Se o programa deve verificar capacete
+        bool validateMask = true; // Se o programa deve verificar máscara
+        bool validateGloves = true; // Se o programa deve verificar luvas
 
         private AmazonRekognitionClient client;
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
         VideoCaptureDevice videoCaptureDevice;
         System.Timers.Timer timer = new System.Timers.Timer();
+        int interval;
+        bool lastFrame = false;
 
         public MainForm()
         {
@@ -42,6 +46,7 @@ namespace TCCVerificacaoEPI
             setTimer();
             client = CreateAWSRekognitionClient();
             ListCameras();
+            if(cbCameraDevices.Items.Count > 0) cbCameraDevices.SelectedIndex = 0;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -53,8 +58,9 @@ namespace TCCVerificacaoEPI
         {
             try
             {
-                if (videoCaptureDevice.IsRunning)
-                    videoCaptureDevice.Stop();
+                //videoCaptureDevice.Stop();
+                videoCaptureDevice.SignalToStop();
+                //videoCaptureDevice.WaitForStop();
             }
             catch { }
         }
@@ -72,9 +78,9 @@ namespace TCCVerificacaoEPI
 
         private void setTimer()
         {
-            timer.Interval = takePictureTimer;
+            timer.Interval = 1000; // 1 segundo
             timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = false;
+            timer.AutoReset = true;
         }
 
         private void startTimer()
@@ -82,19 +88,18 @@ namespace TCCVerificacaoEPI
             bImageAction.Enabled = false;
             bSend.Enabled = false;
             bConnectDisconnect.Enabled = false;
+            interval = captureInterval;
             timer.Start();
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            System.Drawing.Image image = pbImage.Image;
-            StopCamera();
-            pbImage.Image = image;
-            bImageAction.Enabled = Enabled;
-            bSend.Enabled = Enabled;
-            bConnectDisconnect.Enabled = Enabled;
-            bImageAction.Text = "Resetar";
-            timer.Stop();
+            interval--;
+            if (interval == 0)
+            {
+                timer.Stop();
+                lastFrame = true;
+            }
         }
 
         private AmazonRekognitionClient CreateAWSRekognitionClient()
@@ -145,10 +150,7 @@ namespace TCCVerificacaoEPI
         
         private void DrawConfidence(System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize, float confidence, Color color)
         {
-            int imageWidth = imageSize.Width;
-            int imageHeight = imageSize.Height;
-            float fontRatio = 0.05f; // 5% of the image size
-            int fontSize = (int)(Math.Min(imageWidth, imageHeight) * fontRatio);
+            int fontSize = FontSizeFromRatio(imageSize, 0.05f);
 
             Font font = new Font(FontFamily.GenericSansSerif, fontSize);
             Brush brush = new SolidBrush(color);
@@ -156,6 +158,30 @@ namespace TCCVerificacaoEPI
             RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
             System.Drawing.PointF point = new System.Drawing.PointF(realBoundingBox.left, realBoundingBox.top);
             graphics.DrawString(confidence.ToString(), font, brush, point);
+        }
+
+        private void MyDrawString(System.Drawing.Graphics graphics, Size imageSize, Color color, string msg)
+        {
+            int fontSize = FontSizeFromRatio(imageSize, 0.25f);
+
+            Font font = new Font(FontFamily.GenericSansSerif, fontSize);
+            Brush brush = new SolidBrush(color);
+            SizeF textSize = graphics.MeasureString(msg, font);
+
+            float x = (imageSize.Width/2) - (textSize.Width / 2);
+            float y = (imageSize.Height/2) - (textSize.Height / 2);
+
+            System.Drawing.PointF point = new System.Drawing.PointF(x,y);
+            graphics.DrawString(msg, font, brush, point);
+        }
+
+        private int FontSizeFromRatio(Size imageSize, float ratio)
+        {
+            int imageWidth = imageSize.Width;
+            int imageHeight = imageSize.Height;
+            float fontRatio = ratio; // 5% of the image size
+            int fontSize = (int)(Math.Min(imageWidth, imageHeight) * fontRatio);
+            return fontSize;
         }
 
         private void ListCameras()
@@ -168,7 +194,24 @@ namespace TCCVerificacaoEPI
 
         private void CameraNewFrame(object sender, NewFrameEventArgs e)
         {
-            pbImage.Image = (Bitmap) e.Frame.Clone();
+            Bitmap frame = (Bitmap)e.Frame.Clone();
+            if (timer.Enabled)
+            {
+                System.Drawing.Graphics graphics = Graphics.FromImage(frame);
+                MyDrawString(graphics, frame.Size, Color.White, interval.ToString());
+            }
+            else if (lastFrame)
+            {
+                lastFrame = false;
+                System.Drawing.Image image = pbImage.Image;
+                StopCamera();
+                pbImage.Image = image;
+                bImageAction.Enabled = true;
+                bSend.Enabled = true;
+                bConnectDisconnect.Enabled = true;
+                bImageAction.Text = "Resetar";
+            }
+            pbImage.Image = frame;
         }
 
         #endregion
@@ -245,7 +288,7 @@ namespace TCCVerificacaoEPI
             else
             {
                 bConnectDisconnect.Text = "Conectar";
-                bConnectDisconnect.Text = "Capturar";
+                bImageAction.Text = "Capturar";
                 StopCamera();
                 pbImage.Image = null;
             }
