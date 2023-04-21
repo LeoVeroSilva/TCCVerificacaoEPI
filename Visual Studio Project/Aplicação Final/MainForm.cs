@@ -15,6 +15,7 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics.Eventing.Reader;
 
 namespace TCCVerificacaoEPI
 {
@@ -23,9 +24,14 @@ namespace TCCVerificacaoEPI
         // Variaveis de controle - Essas variaiveis podém ser modificadas para alterar o funcionamento do programa
         float minConfiance = 80; // Confiança mínima aceitável, de 50 a 100 (%)
         int captureInterval = 3; // Tempo de espera após pressionamento do botão de captura (em segundo)
-        bool validateHelmet = true; // Se o programa deve verificar capacete
+        bool validateHelmet = false; // Se o programa deve verificar capacete
         bool validateMask = true; // Se o programa deve verificar máscara
         bool validateGloves = true; // Se o programa deve verificar luvas
+
+        // Imagens usadas para a sinalização da validação
+        System.Drawing.Image greenLight = Bitmap.FromFile("GREEN.JPG");
+        System.Drawing.Image yellowLight = Bitmap.FromFile("YELLOW.JPG");
+        System.Drawing.Image redLight = Bitmap.FromFile("RED.JPG");
 
         private AmazonRekognitionClient client;
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -46,7 +52,7 @@ namespace TCCVerificacaoEPI
             setTimer();
             client = CreateAWSRekognitionClient();
             ListCameras();
-            if(cbCameraDevices.Items.Count > 0) cbCameraDevices.SelectedIndex = 0;
+            if (cbCameraDevices.Items.Count > 0) cbCameraDevices.SelectedIndex = 0;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -138,7 +144,7 @@ namespace TCCVerificacaoEPI
 
         private void ProcessReturn(DetectProtectiveEquipmentResponse DetectPPEResponse)
         {
-            printReturnValidatin(DetectPPEResponse);
+            Validation(DetectPPEResponse);
             DrawReturnBoudingBox(DetectPPEResponse);
         }
 
@@ -147,7 +153,7 @@ namespace TCCVerificacaoEPI
             RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
             graphics.DrawRectangle(pen, realBoundingBox.left, realBoundingBox.top, realBoundingBox.width, realBoundingBox.height);
         }
-        
+
         private void DrawConfidence(System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize, float confidence, Color color)
         {
             int fontSize = FontSizeFromRatio(imageSize, 0.05f);
@@ -168,10 +174,10 @@ namespace TCCVerificacaoEPI
             Brush brush = new SolidBrush(color);
             SizeF textSize = graphics.MeasureString(msg, font);
 
-            float x = (imageSize.Width/2) - (textSize.Width / 2);
-            float y = (imageSize.Height/2) - (textSize.Height / 2);
+            float x = (imageSize.Width / 2) - (textSize.Width / 2);
+            float y = (imageSize.Height / 2) - (textSize.Height / 2);
 
-            System.Drawing.PointF point = new System.Drawing.PointF(x,y);
+            System.Drawing.PointF point = new System.Drawing.PointF(x, y);
             graphics.DrawString(msg, font, brush, point);
         }
 
@@ -186,7 +192,7 @@ namespace TCCVerificacaoEPI
 
         private void ListCameras()
         {
-            foreach(FilterInfo filterInfo in filterInfoCollection)
+            foreach (FilterInfo filterInfo in filterInfoCollection)
             {
                 cbCameraDevices.Items.Add(filterInfo.Name);
             }
@@ -217,22 +223,31 @@ namespace TCCVerificacaoEPI
         #endregion
 
         #region Methods for Print Text/Images
-        private void printReturnValidatin(DetectProtectiveEquipmentResponse DetectPPEResponse) 
+        private void Validation(DetectProtectiveEquipmentResponse DetectPPEResponse) 
         {
             string validationMsg = "";
-            foreach (int person in DetectPPEResponse.Summary.PersonsWithRequiredEquipment)
+
+            if (DetectPPEResponse.Persons.Count > 1) // Mais de uma pessoa identificada na captura, o programa apenas valida uma pessoa por vez
             {
-                validationMsg += string.Format("Pessoa: {0} Autorizadad\n", person);
+                validationMsg = "Apenas uma pessoa por validação";
+                pbSemaphore.Image = redLight;
             }
-            foreach (int person in DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment)
+            else if (DetectPPEResponse.Summary.PersonsWithRequiredEquipment.Count > 0)
             {
-                validationMsg += string.Format("Pessoa: {0} NÃO Autorizadad\n", person);
+                validationMsg = "Autorizado";
+                pbSemaphore.Image = greenLight;
             }
-            foreach (int person in DetectPPEResponse.Summary.PersonsIndeterminate)
+            else if (DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment.Count > 0)
             {
-                validationMsg += string.Format("Pessoa: {0} é ideterminável\n", person);
+                validationMsg = "NÃO Autorizado";
+                pbSemaphore.Image = redLight;
             }
-            rtbResponseValidation.Text = validationMsg;
+            else
+            {
+                validationMsg = "Indeterminável";
+                pbSemaphore.Image = yellowLight;
+            }
+            tbValidation.Text = validationMsg;
         }
 
         private void DrawReturnBoudingBox(DetectProtectiveEquipmentResponse DetectPPEResponse) 
@@ -270,7 +285,7 @@ namespace TCCVerificacaoEPI
                     }
                 }
             }
-            pbBoudingBox.Image = bitmap;
+            pbImage.Image = bitmap;
         }
 
         #endregion
@@ -308,6 +323,8 @@ namespace TCCVerificacaoEPI
                     pbImage.Image = null;
                     StartCamera();
                     bImageAction.Text = "Capturar";
+                    pbSemaphore.Image = null;
+                    tbValidation.Text = null;
                     break;
             }
         }

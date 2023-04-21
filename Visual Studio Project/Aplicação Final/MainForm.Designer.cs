@@ -43,17 +43,13 @@ namespace TCCVerificacaoEPI
             this.bSend = new System.Windows.Forms.Button();
             this.bConnectDisconnect = new System.Windows.Forms.Button();
             this.lCameraSource = new System.Windows.Forms.Label();
-            this.rtbResponseValidation = new System.Windows.Forms.RichTextBox();
-            this.pbBoudingBox = new System.Windows.Forms.PictureBox();
             this.gbSourceImage = new System.Windows.Forms.GroupBox();
             this.pbImage = new System.Windows.Forms.PictureBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pbBoudingBox)).BeginInit();
+            this.pbSemaphore = new System.Windows.Forms.PictureBox();
+            this.tbValidation = new System.Windows.Forms.TextBox();
             this.gbSourceImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
-            this.groupBox3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSemaphore)).BeginInit();
             this.SuspendLayout();
             // 
             // cbCameraDevices
@@ -76,7 +72,7 @@ namespace TCCVerificacaoEPI
             // 
             // bSend
             // 
-            this.bSend.Location = new System.Drawing.Point(634, 739);
+            this.bSend.Location = new System.Drawing.Point(107, 739);
             this.bSend.Name = "bSend";
             this.bSend.Size = new System.Drawing.Size(75, 23);
             this.bSend.TabIndex = 10;
@@ -103,26 +99,6 @@ namespace TCCVerificacaoEPI
             this.lCameraSource.TabIndex = 16;
             this.lCameraSource.Text = "Câmera";
             // 
-            // rtbResponseValidation
-            // 
-            this.rtbResponseValidation.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtbResponseValidation.Location = new System.Drawing.Point(6, 12);
-            this.rtbResponseValidation.Name = "rtbResponseValidation";
-            this.rtbResponseValidation.ReadOnly = true;
-            this.rtbResponseValidation.Size = new System.Drawing.Size(371, 263);
-            this.rtbResponseValidation.TabIndex = 19;
-            this.rtbResponseValidation.Text = "";
-            // 
-            // pbBoudingBox
-            // 
-            this.pbBoudingBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pbBoudingBox.Location = new System.Drawing.Point(6, 12);
-            this.pbBoudingBox.Name = "pbBoudingBox";
-            this.pbBoudingBox.Size = new System.Drawing.Size(688, 682);
-            this.pbBoudingBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbBoudingBox.TabIndex = 3;
-            this.pbBoudingBox.TabStop = false;
-            // 
             // gbSourceImage
             // 
             this.gbSourceImage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -144,35 +120,33 @@ namespace TCCVerificacaoEPI
             this.pbImage.TabIndex = 3;
             this.pbImage.TabStop = false;
             // 
-            // groupBox3
+            // pbSemaphore
             // 
-            this.groupBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.groupBox3.Controls.Add(this.pbBoudingBox);
-            this.groupBox3.Location = new System.Drawing.Point(724, 33);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(700, 700);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Delimitadores";
+            this.pbSemaphore.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pbSemaphore.InitialImage = null;
+            this.pbSemaphore.Location = new System.Drawing.Point(684, 739);
+            this.pbSemaphore.Name = "pbSemaphore";
+            this.pbSemaphore.Size = new System.Drawing.Size(25, 25);
+            this.pbSemaphore.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbSemaphore.TabIndex = 4;
+            this.pbSemaphore.TabStop = false;
             // 
-            // groupBox2
+            // tbValidation
             // 
-            this.groupBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.groupBox2.Controls.Add(this.rtbResponseValidation);
-            this.groupBox2.Location = new System.Drawing.Point(1431, 33);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(383, 282);
-            this.groupBox2.TabIndex = 21;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Validação";
+            this.tbValidation.HideSelection = false;
+            this.tbValidation.Location = new System.Drawing.Point(395, 742);
+            this.tbValidation.Name = "tbValidation";
+            this.tbValidation.ReadOnly = true;
+            this.tbValidation.Size = new System.Drawing.Size(283, 20);
+            this.tbValidation.TabIndex = 22;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1826, 771);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox3);
+            this.ClientSize = new System.Drawing.Size(722, 771);
+            this.Controls.Add(this.tbValidation);
+            this.Controls.Add(this.pbSemaphore);
             this.Controls.Add(this.gbSourceImage);
             this.Controls.Add(this.lCameraSource);
             this.Controls.Add(this.bConnectDisconnect);
@@ -184,11 +158,9 @@ namespace TCCVerificacaoEPI
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pbBoudingBox)).EndInit();
             this.gbSourceImage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).EndInit();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbSemaphore)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,12 +171,10 @@ namespace TCCVerificacaoEPI
         private System.Windows.Forms.Button bSend;
         private System.Windows.Forms.Button bConnectDisconnect;
         private System.Windows.Forms.Label lCameraSource;
-        private System.Windows.Forms.RichTextBox rtbResponseValidation;
-        private System.Windows.Forms.PictureBox pbBoudingBox;
         private System.Windows.Forms.GroupBox gbSourceImage;
         private System.Windows.Forms.PictureBox pbImage;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.PictureBox pbSemaphore;
+        private System.Windows.Forms.TextBox tbValidation;
     }
 }
 
