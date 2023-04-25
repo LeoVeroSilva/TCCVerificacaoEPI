@@ -28,31 +28,61 @@ namespace TCCVerificacaoEPI
         bool validateMask = true; // Se o programa deve verificar máscara
         bool validateGloves = true; // Se o programa deve verificar luvas
 
-        // Imagens usadas para a sinalização da validação
+        // Imagens usadas para a sinalização da validação - Localizado na pasta bin/debug
         System.Drawing.Image greenLight = Bitmap.FromFile("GREEN.JPG");
         System.Drawing.Image yellowLight = Bitmap.FromFile("YELLOW.JPG");
         System.Drawing.Image redLight = Bitmap.FromFile("RED.JPG");
 
         private AmazonRekognitionClient client;
+
         FilterInfoCollection filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
         VideoCaptureDevice videoCaptureDevice;
+
         System.Timers.Timer timer = new System.Timers.Timer();
-        int interval;
-        bool lastFrame = false;
+        int remainingTime; // Indica quanto tempo em segundos ainda resta até a captura
+        bool lastFrame = false; // Indica quando o processo da câmera deve pegar um último quadro
 
         public MainForm()
         {
             InitializeComponent();
         }
 
+        #region Delegates
+
+        delegate void LastFrameTakenCallback();
+
+        private async void LastFrameTaken()
+        {
+            // Como o processo da câmera não tem direito de manipular objetos da UI que são gerenciados no processo principal/UI, vamos utilizar o modelamento Invoke para gerenciar essa limitação
+
+            // Em resumo, o modelamento Invoke permite que um método possa ser utilizado por mais de uma thread, porém me permite chamar o méotodo em um processo mas delegar a sua execução para outro processo
+
+            if (this.InvokeRequired)
+            {
+                LastFrameTakenCallback callBack = new LastFrameTakenCallback(LastFrameTaken);
+                this.Invoke(callBack);
+            }
+            else
+            {
+                StopCamera();
+
+                DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, GetImageFromPictureBox());
+                ProcessReturn(DetectPPEResponse);
+                
+                bImageAction.Enabled = true;
+                bImageAction.Text = "Resetar";
+            }
+        }
+
+        #endregion
+
         #region General Methods
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            setTimer();
-            client = CreateAWSRekognitionClient();
-            ListCameras();
-            if (cbCameraDevices.Items.Count > 0) cbCameraDevices.SelectedIndex = 0;
+            setTimer(); 
+            client = CreateAWSRekognitionClient(); // Conecta a instância do serviço AWS baseado nas configurações do projeto e/ou da IDE
+            InitCamera();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -60,13 +90,24 @@ namespace TCCVerificacaoEPI
             StopCamera();
         }
 
+        private void InitCamera()
+        {
+            if (filterInfoCollection.Count > 0)
+            {
+                ConnectCamera();
+                StartCamera();
+            }
+            else
+            {
+                // No camera detected
+            }
+        }
+
         private void StopCamera()
         {
             try
             {
-                //videoCaptureDevice.Stop();
                 videoCaptureDevice.SignalToStop();
-                //videoCaptureDevice.WaitForStop();
             }
             catch { }
         }
@@ -78,8 +119,24 @@ namespace TCCVerificacaoEPI
 
         private void ConnectCamera()
         {
-            videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[cbCameraDevices.SelectedIndex].MonikerString);
-            videoCaptureDevice.NewFrame += CameraNewFrame;
+            videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[0].MonikerString);
+            videoCaptureDevice.NewFrame += new NewFrameEventHandler(CameraNewFrame);
+        }
+
+        private void CameraNewFrame(object sender, NewFrameEventArgs e)
+        {
+            Bitmap frame = (Bitmap)e.Frame.Clone();
+            if (timer.Enabled)
+            {
+                System.Drawing.Graphics graphics = Graphics.FromImage(frame);
+                MyDrawString(graphics, frame.Size, Color.White, remainingTime.ToString());
+            }
+            pbImage.Image = frame;
+            if (lastFrame)
+            {
+                lastFrame = false;
+                LastFrameTaken();
+            }
         }
 
         private void setTimer()
@@ -92,16 +149,14 @@ namespace TCCVerificacaoEPI
         private void startTimer()
         {
             bImageAction.Enabled = false;
-            bSend.Enabled = false;
-            bConnectDisconnect.Enabled = false;
-            interval = captureInterval;
+            remainingTime = captureInterval;
             timer.Start();
         }
 
         private void OnTimedEvent(Object source, System.Timers.ElapsedEventArgs e)
         {
-            interval--;
-            if (interval == 0)
+            remainingTime--;
+            if (remainingTime == 0)
             {
                 timer.Stop();
                 lastFrame = true;
@@ -110,13 +165,14 @@ namespace TCCVerificacaoEPI
 
         private AmazonRekognitionClient CreateAWSRekognitionClient()
         {
-            AWSConfigs.AWSProfileName = "Developer";
+            AWSConfigs.AWSProfileName = "Developer"; // Aqui trocamos o nome do usuário a se conectar aos serviços da AWS (Por padrão a instância sempre tenta se conectar ao usuário Default)
             AmazonRekognitionClient client = new AmazonRekognitionClient();
             return client;
         }
 
         private async Task<DetectProtectiveEquipmentResponse> DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
         {
+            // Monta a requisição pro serviço do AWS com a imagem capturada e definindo quais EPIs devem ser verificados
             List<string> RequiredEquipmentTypes = new List<string>();
             if (validateHelmet) RequiredEquipmentTypes.Add("HEAD_COVER");
             if (validateMask) RequiredEquipmentTypes.Add("FACE_COVER");
@@ -150,12 +206,14 @@ namespace TCCVerificacaoEPI
 
         private void MyDrawRectangle(System.Drawing.Pen pen, System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize)
         {
+            // Desenha um retângulo baseado no BoudingBox retornado pelo serviço
             RealBoudingBox realBoundingBox = new RealBoudingBox(imageSize, boundingBox);
             graphics.DrawRectangle(pen, realBoundingBox.left, realBoundingBox.top, realBoundingBox.width, realBoundingBox.height);
         }
 
         private void DrawConfidence(System.Drawing.Graphics graphics, BoundingBox boundingBox, Size imageSize, float confidence, Color color)
         {
+            // Escreve a confiança da predição no canto superior esquerdo do Bouding Box de forma dinâmica ao tamanho da imagem
             int fontSize = FontSizeFromRatio(imageSize, 0.05f);
 
             Font font = new Font(FontFamily.GenericSansSerif, fontSize);
@@ -168,6 +226,7 @@ namespace TCCVerificacaoEPI
 
         private void MyDrawString(System.Drawing.Graphics graphics, Size imageSize, Color color, string msg)
         {
+            // Escreve um texto no meio da tela de forma dinâmica ao tamanho da imagem
             int fontSize = FontSizeFromRatio(imageSize, 0.25f);
 
             Font font = new Font(FontFamily.GenericSansSerif, fontSize);
@@ -183,41 +242,12 @@ namespace TCCVerificacaoEPI
 
         private int FontSizeFromRatio(Size imageSize, float ratio)
         {
+            // Define um tamanho de fonte baseado no tamanho da imagem
             int imageWidth = imageSize.Width;
             int imageHeight = imageSize.Height;
             float fontRatio = ratio; // 5% of the image size
             int fontSize = (int)(Math.Min(imageWidth, imageHeight) * fontRatio);
             return fontSize;
-        }
-
-        private void ListCameras()
-        {
-            foreach (FilterInfo filterInfo in filterInfoCollection)
-            {
-                cbCameraDevices.Items.Add(filterInfo.Name);
-            }
-        }
-
-        private void CameraNewFrame(object sender, NewFrameEventArgs e)
-        {
-            Bitmap frame = (Bitmap)e.Frame.Clone();
-            if (timer.Enabled)
-            {
-                System.Drawing.Graphics graphics = Graphics.FromImage(frame);
-                MyDrawString(graphics, frame.Size, Color.White, interval.ToString());
-            }
-            else if (lastFrame)
-            {
-                lastFrame = false;
-                System.Drawing.Image image = pbImage.Image;
-                StopCamera();
-                pbImage.Image = image;
-                bImageAction.Enabled = true;
-                bSend.Enabled = true;
-                bConnectDisconnect.Enabled = true;
-                bImageAction.Text = "Resetar";
-            }
-            pbImage.Image = frame;
         }
 
         #endregion
@@ -232,17 +262,17 @@ namespace TCCVerificacaoEPI
                 validationMsg = "Apenas uma pessoa por validação";
                 pbSemaphore.Image = redLight;
             }
-            else if (DetectPPEResponse.Summary.PersonsWithRequiredEquipment.Count > 0)
+            else if (DetectPPEResponse.Summary.PersonsWithRequiredEquipment.Count > 0) // Pessoa detectada possuí todos os EPIs requeridos e atende a confiança mínima
             {
                 validationMsg = "Autorizado";
                 pbSemaphore.Image = greenLight;
             }
-            else if (DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment.Count > 0)
+            else if (DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment.Count > 0) // Pessoa detectada NÃO possuí todos os EPIs requeridos e atende a confiança mínima
             {
                 validationMsg = "NÃO Autorizado";
                 pbSemaphore.Image = redLight;
             }
-            else
+            else // Nenhuma pessoa detectada; Nível de confiança muito baixo para determinar uma pessoa ou EPI
             {
                 validationMsg = "Indeterminável";
                 pbSemaphore.Image = yellowLight;
@@ -252,6 +282,7 @@ namespace TCCVerificacaoEPI
 
         private void DrawReturnBoudingBox(DetectProtectiveEquipmentResponse DetectPPEResponse) 
         {
+
             Bitmap bitmap = new Bitmap(pbImage.Image);
             Graphics graphics = Graphics.FromImage(bitmap);
 
@@ -261,23 +292,25 @@ namespace TCCVerificacaoEPI
 
             foreach (ProtectiveEquipmentPerson person in DetectPPEResponse.Persons)
             {
+                // Desenha o BoudingBox da pessoa
                 MyDrawRectangle(personPen, graphics, person.BoundingBox, bitmap.Size);
                 DrawConfidence(graphics, person.BoundingBox, bitmap.Size, person.Confidence, personPen.Color);
                 foreach (ProtectiveEquipmentBodyPart bodyPart in person.BodyParts)
                 {
-                    //MyDrawRectangle(bodyPartPen, graphics, bodyPart., bitmap.Size);
                     if (bodyPart.EquipmentDetections.Count > 0)
                     {
                         foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
                         {
-                            // Body Part Equipament
+                            // Desenha o BoudingBox da EPI
                             if (equipmentDetection.CoversBodyPart.Value)
                             {
+                                // EPI vestido pela pessoa
                                 MyDrawRectangle(coveredBodyPartPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
                                 DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, coveredBodyPartPen.Color);
                             }
                             else
                             {
+                                // EPI NÃO vestido pela pessoa
                                 MyDrawRectangle(equipamentPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
                                 DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, equipamentPen.Color);
                             } 
@@ -291,23 +324,6 @@ namespace TCCVerificacaoEPI
         #endregion
 
         #region Methods for Buttons Events
-
-        private void bConnectDisconnect_Click(object sender, EventArgs e)
-        {
-            if (bConnectDisconnect.Text == "Conectar")
-            {
-                bConnectDisconnect.Text = "Disconectar";
-                ConnectCamera();
-                StartCamera();
-            }
-            else
-            {
-                bConnectDisconnect.Text = "Conectar";
-                bImageAction.Text = "Capturar";
-                StopCamera();
-                pbImage.Image = null;
-            }
-        }
 
         private void bImageAction_Click(object sender, EventArgs e)
         {
@@ -327,14 +343,6 @@ namespace TCCVerificacaoEPI
                     tbValidation.Text = null;
                     break;
             }
-        }
-
-        private async void bSend_Click(object sender, EventArgs e)
-        {
-            Amazon.Rekognition.Model.Image image;
-            image = GetImageFromPictureBox();
-            DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, image);
-            ProcessReturn(DetectPPEResponse);
         }
 
         #endregion

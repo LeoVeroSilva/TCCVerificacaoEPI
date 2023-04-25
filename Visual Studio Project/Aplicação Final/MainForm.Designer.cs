@@ -38,11 +38,7 @@ namespace TCCVerificacaoEPI
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbCameraDevices = new System.Windows.Forms.ComboBox();
             this.bImageAction = new System.Windows.Forms.Button();
-            this.bSend = new System.Windows.Forms.Button();
-            this.bConnectDisconnect = new System.Windows.Forms.Button();
-            this.lCameraSource = new System.Windows.Forms.Label();
             this.gbSourceImage = new System.Windows.Forms.GroupBox();
             this.pbImage = new System.Windows.Forms.PictureBox();
             this.pbSemaphore = new System.Windows.Forms.PictureBox();
@@ -51,14 +47,6 @@ namespace TCCVerificacaoEPI
             ((System.ComponentModel.ISupportInitialize)(this.pbImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSemaphore)).BeginInit();
             this.SuspendLayout();
-            // 
-            // cbCameraDevices
-            // 
-            this.cbCameraDevices.FormattingEnabled = true;
-            this.cbCameraDevices.Location = new System.Drawing.Point(61, 6);
-            this.cbCameraDevices.Name = "cbCameraDevices";
-            this.cbCameraDevices.Size = new System.Drawing.Size(121, 21);
-            this.cbCameraDevices.TabIndex = 8;
             // 
             // bImageAction
             // 
@@ -69,35 +57,6 @@ namespace TCCVerificacaoEPI
             this.bImageAction.Text = "Capturar";
             this.bImageAction.UseVisualStyleBackColor = true;
             this.bImageAction.Click += new System.EventHandler(this.bImageAction_Click);
-            // 
-            // bSend
-            // 
-            this.bSend.Location = new System.Drawing.Point(107, 739);
-            this.bSend.Name = "bSend";
-            this.bSend.Size = new System.Drawing.Size(75, 23);
-            this.bSend.TabIndex = 10;
-            this.bSend.Text = "Enviar";
-            this.bSend.UseVisualStyleBackColor = true;
-            this.bSend.Click += new System.EventHandler(this.bSend_Click);
-            // 
-            // bConnectDisconnect
-            // 
-            this.bConnectDisconnect.Location = new System.Drawing.Point(188, 4);
-            this.bConnectDisconnect.Name = "bConnectDisconnect";
-            this.bConnectDisconnect.Size = new System.Drawing.Size(75, 23);
-            this.bConnectDisconnect.TabIndex = 11;
-            this.bConnectDisconnect.Text = "Conectar";
-            this.bConnectDisconnect.UseVisualStyleBackColor = true;
-            this.bConnectDisconnect.Click += new System.EventHandler(this.bConnectDisconnect_Click);
-            // 
-            // lCameraSource
-            // 
-            this.lCameraSource.AutoSize = true;
-            this.lCameraSource.Location = new System.Drawing.Point(12, 9);
-            this.lCameraSource.Name = "lCameraSource";
-            this.lCameraSource.Size = new System.Drawing.Size(43, 13);
-            this.lCameraSource.TabIndex = 16;
-            this.lCameraSource.Text = "Câmera";
             // 
             // gbSourceImage
             // 
@@ -148,11 +107,7 @@ namespace TCCVerificacaoEPI
             this.Controls.Add(this.tbValidation);
             this.Controls.Add(this.pbSemaphore);
             this.Controls.Add(this.gbSourceImage);
-            this.Controls.Add(this.lCameraSource);
-            this.Controls.Add(this.bConnectDisconnect);
-            this.Controls.Add(this.bSend);
             this.Controls.Add(this.bImageAction);
-            this.Controls.Add(this.cbCameraDevices);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
@@ -166,11 +121,7 @@ namespace TCCVerificacaoEPI
 
         }
         #endregion
-        private System.Windows.Forms.ComboBox cbCameraDevices;
         private System.Windows.Forms.Button bImageAction;
-        private System.Windows.Forms.Button bSend;
-        private System.Windows.Forms.Button bConnectDisconnect;
-        private System.Windows.Forms.Label lCameraSource;
         private System.Windows.Forms.GroupBox gbSourceImage;
         private System.Windows.Forms.PictureBox pbImage;
         private System.Windows.Forms.PictureBox pbSemaphore;
