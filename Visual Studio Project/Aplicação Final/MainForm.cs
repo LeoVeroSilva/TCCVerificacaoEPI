@@ -21,7 +21,7 @@ namespace TCCVerificacaoEPI
 {
     public partial class MainForm : Form
     {
-        // Variaveis de controle - Essas variaiveis podém ser modificadas para alterar o funcionamento do programa
+        // Variaveis de ajuste - Essas variaiveis podém ser modificadas para alterar o funcionamento do programa
         float minConfiance = 80; // Confiança mínima aceitável, de 50 a 100 (%)
         int captureInterval = 3; // Tempo de espera após pressionamento do botão de captura (em segundo)
         bool validateHelmet = false; // Se o programa deve verificar capacete
@@ -66,7 +66,7 @@ namespace TCCVerificacaoEPI
             {
                 StopCamera();
 
-                DetectProtectiveEquipmentResponse DetectPPEResponse = await DetectPPE(client, GetImageFromPictureBox());
+                DetectProtectiveEquipmentResponse DetectPPEResponse = DetectPPE(client, GetImageFromPictureBox());
                 ProcessReturn(DetectPPEResponse);
                 
                 bImageAction.Enabled = true;
@@ -170,7 +170,7 @@ namespace TCCVerificacaoEPI
             return client;
         }
 
-        private async Task<DetectProtectiveEquipmentResponse> DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
+        private DetectProtectiveEquipmentResponse DetectPPE(AmazonRekognitionClient client, Amazon.Rekognition.Model.Image image)
         {
             // Monta a requisição pro serviço do AWS com a imagem capturada e definindo quais EPIs devem ser verificados
             List<string> RequiredEquipmentTypes = new List<string>();

@@ -148,13 +148,11 @@ namespace TCCVerificacaoEPI
             // 
             // cbCameraDevices
             // 
-            this.cbCameraDevices.Enabled = false;
             this.cbCameraDevices.FormattingEnabled = true;
             this.cbCameraDevices.Location = new System.Drawing.Point(65, 92);
             this.cbCameraDevices.Name = "cbCameraDevices";
             this.cbCameraDevices.Size = new System.Drawing.Size(121, 21);
             this.cbCameraDevices.TabIndex = 8;
-            this.cbCameraDevices.Visible = false;
             // 
             // bImageAction
             // 
@@ -178,14 +176,12 @@ namespace TCCVerificacaoEPI
             // 
             // bConnectDisconnect
             // 
-            this.bConnectDisconnect.Enabled = false;
             this.bConnectDisconnect.Location = new System.Drawing.Point(192, 92);
             this.bConnectDisconnect.Name = "bConnectDisconnect";
             this.bConnectDisconnect.Size = new System.Drawing.Size(75, 23);
             this.bConnectDisconnect.TabIndex = 11;
             this.bConnectDisconnect.Text = "Conectar";
             this.bConnectDisconnect.UseVisualStyleBackColor = true;
-            this.bConnectDisconnect.Visible = false;
             this.bConnectDisconnect.Click += new System.EventHandler(this.bConnectDisconnect_Click);
             // 
             // cbHelmet
@@ -241,7 +237,6 @@ namespace TCCVerificacaoEPI
             this.lCameraSource.Size = new System.Drawing.Size(43, 13);
             this.lCameraSource.TabIndex = 16;
             this.lCameraSource.Text = "Câmera";
-            this.lCameraSource.Visible = false;
             // 
             // lminConfiLvl
             // 
