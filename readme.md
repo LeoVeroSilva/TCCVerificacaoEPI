@@ -3,55 +3,71 @@
 ## TO-DOS
 
 - Link/anexo do trabalho final
-- UI não responsível
+- UI não responsiva
 - Falar sobre Invoke
+- Falar sobre regiões
 
 ## Resumo
 
-Este projeto em C# (.NET) foi desenvolvido como parte do trabalho de conclusão da graduação em Engenharia da Computação do aluno Leonardo Verona da Silva, na Universidade do Vale do Rio dos Sinos Unisinos. A ideia do projeto surgiu da união entre pontos de interesse do professor orientador e do graduando, e junto dos interesses do graduando em aprofundar o conhecimento no aprendizado de máquina. O projeto utiliza dos serviços de [Detecção de equipamentos de proteção individual] do pacote [Rekognition] da [Amazon Web Services (AWS)] para fazer a verificação e validação do uso de EPI por pessoas. O uso dessa aplicação para permitir ou impedir a entrada de ambientes ensalubres ou que oferem riscos aos trabalhadores pode ajudar na prevenção de acidentes e combater a negligência de funcionários e empregadores. Para mais detalhes é possível conferir o trabalho [Verificação do uso de EPIs com uso de inteligência artificial].
+Este projeto em C# (.NET) foi desenvolvido como parte do trabalho de conclusão da graduação em Engenharia da Computação do aluno Leonardo Verona da Silva, na Universidade do Vale do Rio dos Sinos Unisinos. A ideia do projeto surgiu da união entre pontos de interesse do professor orientador e do graduando, e junto dos interesses do graduando em aprofundar o conhecimento no aprendizado de máquina. O projeto utiliza dos serviços de [Detecção de equipamentos de proteção individual] do pacote [Rekognition] da [Amazon Web Services (AWS)] para fazer a verificação e validação do uso de EPI por pessoas. O uso dessa aplicação para permitir ou impedir a entrada de ambientes insalubres ou que oferecem riscos aos trabalhadores pode ajudar na prevenção de acidentes e combater a negligência de funcionários e empregadores. Para mais detalhes é possível conferir o trabalho [Verificação do uso de EPIs com uso de inteligência artificial].
 
 ## Aplicações
 
-Forma desenvolvidas duas aplicaçes desenvolvidas similares mas com propostas similares que podem ser encontradas na pasta [Visual Studio Project].
+Forma desenvolvidas duas aplicações desenvolvidas similares mas com propostas similares que podem ser encontradas na pasta [Visual Studio Project].
 
 - O projeto C# [Aplicação de Teste] é a primeira versão do aplicação que foca em facilitar o desenvolvimento, teste e leitura de fluxo de dados. Aqui temos vários elementos de tela que ajudam a acompanhar o fluxo das imagens, validações e retornos do serviço de detecção de EPIs.
-- O projeto C# [Aplicação Final] é a versão simplificada, mais sussinta e com foco somente nas informações que são realmente necessárias para utilização de um usuário final.
+- O projeto C# [Aplicação Final] é a versão simplificada, mais sucinta e com foco somente nas informações que são realmente necessárias para utilização de um usuário final.
 
-> *Nota: Por conta das simplificações, o fluxo de passos na tela teve que ser otimizado e com isso mudanças no código tiveram que ser feitas, comportamentos ajustados e funcionalidades adicionadas. Dito isso, espere que a Aplicação Final estja mais refinada do que a Aplicação de Teste.*
+É possível ver mais detalhes sobre o funcionamento e uso das aplicações nas respectivas pastas dos projetos.
 
-### Descritivo da Aplicação de Teste
+> Notas: 
+> - Por conta das simplificações, o fluxo de passos na tela teve que ser otimizado e com isso mudanças no código tiveram que ser feitas, comportamentos ajustados e funcionalidades adicionadas. Dito isso, espere que a Aplicação Final esta mais refinada do que a Aplicação de Teste.*
+> - Devido a complexidade e não ser o foco do projeto, não foi possível gerar uma interface responsiva e adaptável com os diferentes proporções e resoluções de tela. O projeto foi desenvolvido com base em um monitor com proporção 16:9 e resolução 1920x1080, logo em algumas telas com proporções ou resoluções menores pode acabar cortando ou escondendo alguns elementos da aplicação.
 
-![Aplicação de Teste](/imgs/Aplicação%20de%20Teste.png "Aplicação de Teste")
+## Pré-Requisitos
 
-O conjunto dos dois *radio button* serve para selecionar a origem da imagem a ser analisada. Sendo ou originada de um arquivo local ou de algum dispositivo de captura (como por exemplo uma câmera ou webcam).
+Para rodar e testar essas aplicações existem algumas pré-requisitos como:
 
-> Os elementos de tela exclusivo para o gerenciamento de arquivos e exclusivos para gerenciamento do dispositivo de captura possuem comportament dinâmico na tela. Ou seja, se for selecionado a opção de fonte da imagem vinda de arquivo, então somente os campos focados na gestão do arquivo irão aparecer. Assim como selecionar a opção de fonte da imagem vinda do dispositivo de captura irá fazer somente os campos focados na gestão do dispositivo de captura aparecer.
+- Criar uma conta na AWS e criar um usuário passível de consumo dos serviços do Rekognition;
+- Instalação do SDK do AWS para .NET no Visual Studio;
+- Baixar algumas bibliotecas para .NET.
 
-O campo **Arquivo** permite a informação do caminho do arquivo a ser carregado. Junto ao campo existe um botão que permite utilizar o sistema de busca de arquivos nativo do Windows. O campo **Câmera** que permite a seleção do dispositivo de captura e o botão ao lado permite conectar e desconectar do dispositivo de captura.
+É possível consumir essas informações direto do guia do desenvolvedor do [AWS SDK for .NET].
 
-> Uma vez que o dispositivo de captura for conectado com sucesso, o vídeo será visivel na sessão **Imagem**.
+### Conta AWS e Usuário
 
-A seção denominada como **Imagem** é onde será mostrado a imagem carregada a partir de um arquivo, ou vídeo/frame do dispositivo de captura. O botão abaixo da seção **Imagem** responsável é por carregar a imagem do arquivo local, ou capturar um frame do dispositivo de captura, ou reinicia o vídeo do dispositivo de captura.O comportamento dinâmico do botão é afetado pela a opção da origem da imagem e estado da aplicação. Por exemplo:
-- Ao selecionar <ins>Arquivo</ins> como origem da imagem, o botão vai estar com o texto "*Carregar*", permite o carregamento da imagem local para vizualização da mesma e conferência antes do envio para verificação;
-- Ao selecionar <ins>Câmera</ins> como origem da imagem, o botão vai estar com o texto "*Capturar*", permite captura do último frame retornado do dispositivo de captura para vizualizar da mesma e conferência antes do envio para verificação. Uma vez que um frame é capturado, o botão vai estar com o texto "*Resetar*", permite descartar o frame capturado e reiniciar o vídeo do dispositivo de captura.
+Primeiramente temos que criar nossa conta no AWS, podemos seguir o seguinte guia da AWS, que basicamente indica como são os primeiros passos para criação e configuração da conta AWS.
 
-O botão **Enviar** é responsável por enviar a imagem ou frame para validação no serviços de detecção de EPIs da AWS Rekognition. 
+[Como criar e ativar uma nova conta da AWS?] da AWS presente no capítulo  que basicamente consiste em criar uma conta 
 
-Uma vez que uma imagem é enviada para o serviços de detecção de EPIs, o retorno da validação é dividido em seções:
+>Nota: Como AWS é uma plataforma de serviços paga, a criação da conta pedirá informações como endereço, telefone e um cartão de crédito para debitar os consumos. Importante ressaltar que a AWS oferece vários planos, incluindo, um gratuito que permite usufruir de alguns serviços de graça em troca de algumas limitações de uso mensal ou período máximo de uso. Mais detalhes podem ser conferidos em [Amazon Web Services (AWS)].
 
-- A seção **Delimitadores** mostra a imagem enviada com os delimitadores (ou quadrantes) das pessoas e EPIs detectados. Sendo quadrantes amarelo para pessoas, quadrantes verdes para EPIs detectados e sendo vestidos pela pessoa, e quadrantes vermelhos para EPIs detectados, mas não sendo usados corretamente pela pessoa;
-- A seção **Validação** mostra um retorno resumido do serviço, listado quais pessoas estão autorizadas, quais não estão autorizadas e quais pessoas/casos foram indeterminaveis;
-- A seção **Retorno Bruto** mostra o valor bruto retornado pelo serviço, com mais detalhes técnicos e informações como identificadores, marcadores e as porcentagens de confiança.
+Uma vez com a conta criada e um as credenciais do usuário root, a AWS recomenda que seja criado um usuário a parte do root que será responsável por consumir e utilizar dos serviços. Isso garante que as super autorizações do root interfiram na gestão do uso dos serviços e aumentar a segurança do vazamento de suas credenciais. Nos guias da AWS, se recomenda utilização do *IAM Identity Center*, mas ela é uma aplicação muito complexa de gestão de usuários e login dos mesmos, que faz mais sentido para empresas que múltiplos empregados, desenvolvedores e contextos diferentes. Como o objetivo desde projeto era usufruir dos serviços sem grandes necessidades de gestão de múltiplos usuários, foi usado uma maneira mais simples para criar o usuário e configurar suas autorizações. Os passos tomados foram os seguintes:
 
-> Nota: Aplicação de Teste mostra até 15 pessoas
-> Para fins de exemplificação de mal uso de EPIs, podemos dar dois exemplos práticos. Uma pessoa utilizando máscara, mas a máscara não cobre o nariz, apenas a boca. A outra situação seria a presença de um capacete na imagem, mas o capacete está na mão da pessoa.
+1. Logar na instância AWS com o usuário Root;
+2. Acessar o serviço *Identity and Access Management (IAM)*;
+3. Na aba *Gerenciamento de acesso*, selecionar a opção *Usuários*;
+4. Clicar no botão *Adicionar Usuário*;
+5. Seguir o passo-a-passo de criação do usuário até chegar na etapa de definições de permissões;
+6. Na etapa de definições de permissões, selecionar a opção *Anexar políticas diretamente*, na seção *Políticas de permissões* pesquisar por "Rekognition", selecionar a permissão *AmazonRekognitionFullAccess* e seguir com a criação do usuário até o final.
 
-- Campo de texto para logs
+Tendo o usuário criado agora precisamos criar as chaves de acesso remoto, permitindo que aplicações externas possam consumir os serviços do Rekognition em nome do user criado. 
 
-### Descritivo da Aplicação Final
-![Aplicação Final](/imgs/Aplicação%20Final.png "Aplicação de Teste")
+1. Voltando para o IAM é possível ver o novo usuário criado listado no sistema, ao clicar no nome do mesmo, navegamos para os detalhes desse usuário. 
+2. Na tab *Credenciais de segurança*, temos a seção *Chaves de acesso*, clicar no botão criar *Criar chave de Acesso*;
+3. Selecionar a opção "Código Local" e prossiga até confirmação da criação da chave de acesso;
+4. Importante baixar o arquivo .csv gerado pois ele contém as credenciais da chave de acesso. Ou você pode anotar os valores da Chave de acesso e d Chave de acesso secreta
 
-##
+### SDK do AWS para .NET no Visual Studio
+
+- Baixar e instalar
+- Logar com user do AWS
+
+### Baixar Bibliotecas Adicionais
+
+- NuGet
+- AWS
+- AForge
 
 ## Useful Links and Information
 
@@ -89,7 +105,7 @@ Uma vez que uma imagem é enviada para o serviços de detecção de EPIs, o reto
 - Application must consume the API from AWS Rekognition:
   - PPE Detection Services;
   - Custom Labels Services;
-- Application must have a image capture device for instantanous and continuously image sampling;
+- Application must have a image capture device for instantaneous and continuously image sampling;
 
 ## Amazon Rekognition
 
@@ -97,7 +113,7 @@ Uma vez que uma imagem é enviada para o serviços de detecção de EPIs, o reto
 
 - Bytes: Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to DetectCustomLabels is 4MB.
 - Type: Base64-encoded binary data object
-- Lenth Constraints: Minimum length of 1. Maximum length of 5242880.
+- Length Constraints: Minimum length of 1. Maximum length of 5242880.
 - Required: No
 
 ### Personal Protective Equipment (PPE)
@@ -116,3 +132,5 @@ API Method: DetectProtectiveEquipment
 [Visual Studio Project]:/Visual%20Studio%20Project/
 [Aplicação Final]:/Visual%20Studio%20Project/Aplicação%20Final/
 [Aplicação de Teste]:/Visual%20Studio%20Project/Aplicação%20de%20Teste/
+[AWS SDK for .NET]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/welcome.html
+[Como criar e ativar uma nova conta da AWS?](https://repost.aws/pt/knowledge-center/create-and-activate-aws-account)
