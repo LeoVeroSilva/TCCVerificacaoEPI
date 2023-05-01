@@ -56,18 +56,33 @@ Tendo o usuário criado agora precisamos criar as chaves de acesso remoto, permi
 1. Voltando para o IAM é possível ver o novo usuário criado listado no sistema, ao clicar no nome do mesmo, navegamos para os detalhes desse usuário. 
 2. Na tab *Credenciais de segurança*, temos a seção *Chaves de acesso*, clicar no botão criar *Criar chave de Acesso*;
 3. Selecionar a opção "Código Local" e prossiga até confirmação da criação da chave de acesso;
-4. Importante baixar o arquivo .csv gerado pois ele contém as credenciais da chave de acesso. Ou você pode anotar os valores da Chave de acesso e d Chave de acesso secreta
+4. Importante baixar o arquivo .csv gerado pois ele contém o código da chave de acesso e o código Chave de acesso secreta (Outra opção válida é anotar os números para uso posterior).
 
 ### SDK do AWS para .NET no Visual Studio
 
-- Baixar e instalar
-- Logar com user do AWS
+Neste projeto foi utilizado o Toolkit da AWS para o Visual Studio, que permite gerenciamento do consumo do serviço direto da IDE de desenvolvimento, excluindo a necessidade de uso do interface de linha de comando (CLI).
+
+Para usufruir do mesmo toolkit primeiramente deve se instalar o Visual Studio e depois baixar a extensão *AWS Toolkit For Visual Studio*. Uma vez com a extensão instalada, a janela *AWS Explorer* vai estar disponível no Visual Studio. Nessa janela é possível fornecer as chaves de acesso, criadas anteriormente para o usuário, e permitir login da IDE na instância do AWS. Feito isso o uso das bibliotecas da AWS vai implicitamente buscar as informações de credenciais e chave de acesso direto da IDE.
+
+Para mais detalhes do toolkit, conferir em [AWS Toolkit For Visual Studio]
 
 ### Baixar Bibliotecas Adicionais
 
-- NuGet
-- AWS
-- AForge
+Importante ressaltar que o AWS Toolkit For Visual Studio somente prepara a IDE como ambiente de desenvolvimento que usufruiu dos serviços da AWS. A extensão não instala nenhum biblioteca específica dos serviços disponíveis. Para baixar as bibliotecas podemos manual baixar os arquivos e incluir no projeto, ou podemos utilizar o NuGet. NuGet é um gerenciador de pacotes e bibliotecas do .NET que cuida da instalação, da atualização e da incoporação das bibliotecas e pacotes nos projetos .NET. Neste projeto foi utilizado o NuGet dado a sua praticidade.
+
+Convenientemente o Visual Studio oferece funções que integram diretamente com a plataforma do NuGet sem necessidade de instalação de programas externos. Basta procurar pela opção *Gerenciar Pacotes NuGet* no Visual Studio e seleciona-la.
+Selecionar esta opção vai abrir uma nova janela do específica do NuGet e aqui podemos procurar e instalar as seguintes bibliotecas:
+
+- **AWSSDK.Core**
+- **AWSSDK.Rekognition**
+
+Para gestão dos dispositivos de captura (por exemplo, câmeras) e captura de frames, foi utilizado algumas bibliotecas da AForge. AForge é um framework desnehado para C# que busca facilitar a gestão de dispositivos de captura e manipulamento de imagens/frames.
+
+- **AForge**
+- **AForge.Video**
+- **AForge.Video.DirectShow**
+
+Para mais detalhes de como instalar o AWSSDK com NuGet, conferir em [Instale pacotes AWSSDK com o NuGet].
 
 ## Useful Links and Information
 
@@ -133,4 +148,6 @@ API Method: DetectProtectiveEquipment
 [Aplicação Final]:/Visual%20Studio%20Project/Aplicação%20Final/
 [Aplicação de Teste]:/Visual%20Studio%20Project/Aplicação%20de%20Teste/
 [AWS SDK for .NET]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/welcome.html
-[Como criar e ativar uma nova conta da AWS?](https://repost.aws/pt/knowledge-center/create-and-activate-aws-account)
+[Instalar e configurar sua cadeia de ferramentas]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/net-dg-dev-env.html
+[AWS Toolkit For Visual Studio]:https://docs.aws.amazon.com/pt_br/toolkit-for-visual-studio/latest/user-guide/welcome.html
+[Instale pacotes AWSSDK com o NuGet]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/net-dg-install-assemblies.html
