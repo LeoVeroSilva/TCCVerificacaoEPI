@@ -3,9 +3,8 @@
 ## TO-DOS
 
 - Link/anexo do trabalho final
-- UI não responsiva
-- Falar sobre Invoke
-- Falar sobre regiões
+- Revisar descrição das aplicações
+- Melhorar imagem da aplicação final
 
 ## Resumo
 
@@ -40,7 +39,9 @@ Primeiramente temos que criar nossa conta no AWS, podemos seguir o seguinte guia
 
 [Como criar e ativar uma nova conta da AWS?] da AWS presente no capítulo  que basicamente consiste em criar uma conta 
 
->Nota: Como AWS é uma plataforma de serviços paga, a criação da conta pedirá informações como endereço, telefone e um cartão de crédito para debitar os consumos. Importante ressaltar que a AWS oferece vários planos, incluindo, um gratuito que permite usufruir de alguns serviços de graça em troca de algumas limitações de uso mensal ou período máximo de uso. Mais detalhes podem ser conferidos em [Amazon Web Services (AWS)].
+>Notas: 
+> - Como AWS é uma plataforma de serviços paga, a criação da conta pedirá informações como endereço, telefone e um cartão de crédito para debitar os consumos. Importante ressaltar que a AWS oferece vários planos, incluindo, um gratuito que permite usufruir de alguns serviços de graça em troca de algumas limitações de uso mensal ou período máximo de uso. Mais detalhes podem ser conferidos em [Amazon Web Services (AWS)].
+> - As contas AWS são divididas por regiões e cada região possuí suas regras de cálculo de custo e disponibilidade de serviços. Para este trabalho foi criado a conta na região recomendada, *US East (N. Virginia)* que comportava a criação de uma conta do tipo *Free-Tier* e todos os serviços de interesse estavam disponiveis para consumo. 
 
 Uma vez com a conta criada e um as credenciais do usuário root, a AWS recomenda que seja criado um usuário a parte do root que será responsável por consumir e utilizar dos serviços. Isso garante que as super autorizações do root interfiram na gestão do uso dos serviços e aumentar a segurança do vazamento de suas credenciais. Nos guias da AWS, se recomenda utilização do *IAM Identity Center*, mas ela é uma aplicação muito complexa de gestão de usuários e login dos mesmos, que faz mais sentido para empresas que múltiplos empregados, desenvolvedores e contextos diferentes. Como o objetivo desde projeto era usufruir dos serviços sem grandes necessidades de gestão de múltiplos usuários, foi usado uma maneira mais simples para criar o usuário e configurar suas autorizações. Os passos tomados foram os seguintes:
 
@@ -84,63 +85,24 @@ Para gestão dos dispositivos de captura (por exemplo, câmeras) e captura de fr
 
 Para mais detalhes de como instalar o AWSSDK com NuGet, conferir em [Instale pacotes AWSSDK com o NuGet].
 
-## Useful Links and Information
+## Informações Adicionais
 
-- General
-  - [AWS SDKs and Tools Reference Guide](https://docs.aws.amazon.com/sdkref/latest/guide/overview.html) (Overall documentation about SDKs and Tools)
-- .NET
-  - [AWS SDK for .NET](https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/welcome.html)(Main page for AWS SDK for .NET)
-    - [AWS asynchronous APIs for .NET](https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/sdk-net-async-api.html)
-    - 
-  - [AWS SDK for .NET Version 3 API Reference](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/Index.html)(THE BIBLE)
-    - [DetectProtectiveEquipment Method](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DetectProtectiveEquipment.html)
-  - [AWS SDK for .NET - GitHub](https://github.com/aws/aws-sdk-net)(General information and examples about Services with .NET)
-  - [Examples for AWS SDK for .NET 3.x - GitHub](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3)(Generic examples for .NET)
-- Amazon Web Services (AWS)
-  - [Amazon Rekognition](https://docs.aws.amazon.com/rekognition/latest/dg/what-is.html)
-    - [Developer Guide - PDF](/docs/rekognition-dg.pdf)
-    - [Rekognition Custom Labels](/docs/Rekognition%20Custom%20Labels.pdf)
-    - [PPE Detection](https://docs.aws.amazon.com/rekognition/latest/dg/ppe-detection.html)
-      - [Example in Java - GitHub](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javav2/usecases/creating_lambda_ppe)
-- Nice to Know/Refer
-  - [Amazon Rekognition Workplace Safety](https://aws.amazon.com/rekognition/workplace-safety/)
-  - [Task-based asynchronous pattern (TAP) in .NET: Introduction and overview](https://learn.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap)
+- Uma imagem/vídeo pode ser analisada pelo AWS Rekognition a patir de um repositório de arquivos online da AWS (conhecido como S3) ou pelo envio da imagem em bytes na chamada da API do serviço. A imagem pode ter no máximo 5MBs (4MBs para o serviço *Detect Custom Labels*);
+- O serviço de deteção de EPI consegue analisar até 15 pessoas na imagem;
+- A grande maioria das APIs do AWS Rekognition utilizam do [Padrão assíncrono baseado em tarefas (TAP)] que consiste na arquitetura de chamadas assincronas para melhor gerenciamento de recursos e processos, como apontado em [APIs assíncronas da AWS para .NET].
 
+## Links Uteis
 
-## Definition of Requirements
-
-### Functional Requirements
-
-- The application must allow the selection between the services of PPE Detection and Custom Labels;
-- It should have authentication controls and possibility to input the API Key and necessary credentials;
-- It should remember the API Key, when asked, within a external file;
-
-### Technical Requirements
-
-- Application must consume the API from AWS Rekognition:
-  - PPE Detection Services;
-  - Custom Labels Services;
-- Application must have a image capture device for instantaneous and continuously image sampling;
-
-## Amazon Rekognition
-
-### *Image* Object
-
-- Bytes: Blob of image bytes up to 5 MBs. Note that the maximum image size you can pass to DetectCustomLabels is 4MB.
-- Type: Base64-encoded binary data object
-- Length Constraints: Minimum length of 1. Maximum length of 5242880.
-- Required: No
-
-### Personal Protective Equipment (PPE)
-
-API Method: DetectProtectiveEquipment 
-
-#### Known Limitation
-
-- Up to 15 persons max per image
+- [O que é o Amazon Rekognition?](https://docs.aws.amazon.com/pt_br/rekognition/latest/dg/what-is.html)
+- [AWS Guia de referência de SDKs e ferramentas](https://docs.aws.amazon.com/pt_br/sdkref/latest/guide/overview.html)
+- [AWS Referência para API do SDK para .NET (Versão 3)](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/Index.html)
+- [AWS Rekognition - Detect Protective Equipment](https://docs.aws.amazon.com/pt_br/rekognition/latest/APIReference/API_DetectProtectiveEquipment.html)
+- [GitHub - AWS SDK para .NET](https://github.com/aws/aws-sdk-net)
+- [GitHub - Exemplos com AWS SDK for .NET](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/dotnetv3)
+- [Guia do Desenvolvedor - Detecção de equipamentos de proteção individual](https://docs.aws.amazon.com/pt_br/rekognition/latest/dg/ppe-detection.html)
+- [AWS - Segurança no local de trabalho com o Amazon Rekognition](https://aws.amazon.com/pt/rekognition/workplace-safety/)
 
 [Verificação do uso de EPIs com uso de inteligência artificial]:
-
 [Amazon Web Services (AWS)]:https://aws.amazon.com/pt/free/?trk=2ee11bb2-bc40-4546-9852-2c4ad8e8f646&sc_channel=ps&ef_id=CjwKCAjwuqiiBhBtEiwATgvixJNd7n1cjYiXkyCLx7UttRTN0KtZCvQ1dq6sXtKCdT40JnqP7HRXphoCZ0sQAvD_BwE:G:s&s_kwcid=AL!4422!3!561843094929!e!!g!!aws!15278604629!130587771740&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all
 [Detecção de equipamentos de proteção individual]:https://docs.aws.amazon.com/pt_br/rekognition/latest/dg/ppe-detection.html
 [Rekognition]:https://aws.amazon.com/pt/rekognition/?nc1=h_ls
@@ -151,3 +113,5 @@ API Method: DetectProtectiveEquipment
 [Instalar e configurar sua cadeia de ferramentas]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/net-dg-dev-env.html
 [AWS Toolkit For Visual Studio]:https://docs.aws.amazon.com/pt_br/toolkit-for-visual-studio/latest/user-guide/welcome.html
 [Instale pacotes AWSSDK com o NuGet]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/net-dg-install-assemblies.html
+[Padrão assíncrono baseado em tarefas (TAP)]:https://learn.microsoft.com/pt-br/dotnet/standard/asynchronous-programming-patterns/task-based-asynchronous-pattern-tap
+[APIs assíncronas da AWS para .NET]:https://docs.aws.amazon.com/pt_br/sdk-for-net/v3/developer-guide/sdk-net-async-api.html

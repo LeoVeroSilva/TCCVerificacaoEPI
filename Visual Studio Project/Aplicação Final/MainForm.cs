@@ -24,7 +24,7 @@ namespace TCCVerificacaoEPI
         // Variaveis de ajuste - Essas variaiveis podém ser modificadas para alterar o funcionamento do programa
         float minConfiance = 80; // Confiança mínima aceitável, de 50 a 100 (%)
         int captureInterval = 3; // Tempo de espera após pressionamento do botão de captura (em segundo)
-        bool validateHelmet = false; // Se o programa deve verificar capacete
+        bool validateHelmet = true; // Se o programa deve verificar capacete
         bool validateMask = true; // Se o programa deve verificar máscara
         bool validateGloves = true; // Se o programa deve verificar luvas
 

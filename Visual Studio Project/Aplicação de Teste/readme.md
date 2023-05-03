@@ -20,13 +20,13 @@ O botão **Enviar** é responsável por enviar a imagem ou frame para validaçã
 
 Uma vez que uma imagem é enviada para o serviços de detecção de EPIs, o retorno da validação é dividido em seções:
 
-- A seção **Delimitadores** mostra a imagem enviada com os delimitadores (ou quadrantes) das pessoas e EPIs detectados. Sendo quadrantes amarelo para pessoas, quadrantes verdes para EPIs detectados e sendo vestidos pela pessoa, e quadrantes vermelhos para EPIs detectados, mas não sendo usados corretamente pela pessoa;
-- A seção **Validação** mostra um retorno resumido do serviço, listado quais pessoas estão autorizadas, quais não estão autorizadas e quais pessoas/casos foram indetermináveis;
+- A seção **Delimitadores** mostra a imagem enviada com os delimitadores (ou quadrantes) das pessoas e EPIs detectados. Sendo quadrantes amarelo para pessoas, quadrantes verdes para EPIs detectados e sendo vestidos pela pessoa, e quadrantes vermelhos para EPIs detectados, mas não sendo usados corretamente pela pessoa. Dentro dos quadrantes amarelos também será impresso um número que serve como identificador da pessoa que pode ser utilizado para avaliar melhor o retorno na na seção **Validação** e na seção **Retorno Bruto**;
+- A seção **Validação** mostra um retorno resumido do serviço, listado quais pessoas estão autorizadas, quais não estão autorizadas e quais pessoas/casos foram indetermináveis. Está validação resumida segue como base a confiaça mínima requisitada e quais EPIs são válidos para conferência;
 - A seção **Retorno Bruto** mostra o valor bruto retornado pelo serviço, com mais detalhes técnicos e informações como identificadores, marcadores e as porcentagens de confiança.
 
 > Nota: Aplicação de Teste consegue processar até 15 pessoas na imagem.
 > Para fins de exemplificação de mal uso de EPIs, podemos dar dois exemplos práticos. Uma pessoa utilizando máscara, mas a máscara não cobre o nariz, apenas a boca. A outra situação seria a presença de um capacete na imagem, mas o capacete está na mão da pessoa.
 
+No canto superior direito existe um campo de texto para escrever logs da aplicação. Aqui algumas informações curtas são expostas para indicar qual ação o programa está executando, se foi bem sucedida ou se algum erro aconteceu.
 
-
-No canto superior direito também Campo de texto para logs
+> Nota: A aplicação não cobre todo e qualquer uso erroneou, existem algumas combinações de ações que podém gerar efeitos negativos ou quebra do programa.
