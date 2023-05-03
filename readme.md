@@ -103,6 +103,7 @@ Para mais detalhes de como instalar o AWSSDK com NuGet, conferir em [Instale pac
 - [AWS - Segurança no local de trabalho com o Amazon Rekognition](https://aws.amazon.com/pt/rekognition/workplace-safety/)
 
 [Verificação do uso de EPIs com uso de inteligência artificial]:
+
 [Amazon Web Services (AWS)]:https://aws.amazon.com/pt/free/?trk=2ee11bb2-bc40-4546-9852-2c4ad8e8f646&sc_channel=ps&ef_id=CjwKCAjwuqiiBhBtEiwATgvixJNd7n1cjYiXkyCLx7UttRTN0KtZCvQ1dq6sXtKCdT40JnqP7HRXphoCZ0sQAvD_BwE:G:s&s_kwcid=AL!4422!3!561843094929!e!!g!!aws!15278604629!130587771740&all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc&awsf.Free%20Tier%20Types=*all&awsf.Free%20Tier%20Categories=*all
 [Detecção de equipamentos de proteção individual]:https://docs.aws.amazon.com/pt_br/rekognition/latest/dg/ppe-detection.html
 [Rekognition]:https://aws.amazon.com/pt/rekognition/?nc1=h_ls
