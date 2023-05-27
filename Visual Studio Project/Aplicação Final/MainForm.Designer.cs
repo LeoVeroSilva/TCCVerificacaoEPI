@@ -110,7 +110,7 @@ namespace TCCVerificacaoEPI
             this.Controls.Add(this.bImageAction);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
+            this.Text = "Aplicação Final";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.gbSourceImage.ResumeLayout(false);
