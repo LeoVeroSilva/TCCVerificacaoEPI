@@ -50,7 +50,7 @@ namespace TCCVerificacaoEPI
             // 
             // bImageAction
             // 
-            this.bImageAction.Location = new System.Drawing.Point(21, 739);
+            this.bImageAction.Location = new System.Drawing.Point(21, 659);
             this.bImageAction.Name = "bImageAction";
             this.bImageAction.Size = new System.Drawing.Size(75, 23);
             this.bImageAction.TabIndex = 9;
@@ -64,7 +64,7 @@ namespace TCCVerificacaoEPI
             this.gbSourceImage.Controls.Add(this.pbImage);
             this.gbSourceImage.Location = new System.Drawing.Point(15, 33);
             this.gbSourceImage.Name = "gbSourceImage";
-            this.gbSourceImage.Size = new System.Drawing.Size(700, 700);
+            this.gbSourceImage.Size = new System.Drawing.Size(613, 620);
             this.gbSourceImage.TabIndex = 5;
             this.gbSourceImage.TabStop = false;
             this.gbSourceImage.Text = "Imagem";
@@ -74,7 +74,7 @@ namespace TCCVerificacaoEPI
             this.pbImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbImage.Location = new System.Drawing.Point(6, 12);
             this.pbImage.Name = "pbImage";
-            this.pbImage.Size = new System.Drawing.Size(688, 682);
+            this.pbImage.Size = new System.Drawing.Size(600, 600);
             this.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImage.TabIndex = 3;
             this.pbImage.TabStop = false;
@@ -83,7 +83,7 @@ namespace TCCVerificacaoEPI
             // 
             this.pbSemaphore.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbSemaphore.InitialImage = null;
-            this.pbSemaphore.Location = new System.Drawing.Point(684, 739);
+            this.pbSemaphore.Location = new System.Drawing.Point(603, 659);
             this.pbSemaphore.Name = "pbSemaphore";
             this.pbSemaphore.Size = new System.Drawing.Size(25, 25);
             this.pbSemaphore.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -93,7 +93,7 @@ namespace TCCVerificacaoEPI
             // tbValidation
             // 
             this.tbValidation.HideSelection = false;
-            this.tbValidation.Location = new System.Drawing.Point(395, 742);
+            this.tbValidation.Location = new System.Drawing.Point(314, 664);
             this.tbValidation.Name = "tbValidation";
             this.tbValidation.ReadOnly = true;
             this.tbValidation.Size = new System.Drawing.Size(283, 20);
@@ -103,7 +103,7 @@ namespace TCCVerificacaoEPI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(722, 771);
+            this.ClientSize = new System.Drawing.Size(639, 694);
             this.Controls.Add(this.tbValidation);
             this.Controls.Add(this.pbSemaphore);
             this.Controls.Add(this.gbSourceImage);
