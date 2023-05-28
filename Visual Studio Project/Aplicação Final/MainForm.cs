@@ -16,6 +16,7 @@ using AForge.Video.DirectShow;
 using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 
 namespace TCCVerificacaoEPI
 {
@@ -250,6 +251,19 @@ namespace TCCVerificacaoEPI
             return fontSize;
         }
 
+        private float LowestConfidence(ProtectiveEquipmentBodyPart bodyPart)
+        {
+            float bodyPartConfidence = bodyPart.Confidence;
+            float equipamentDetectedConfidence = bodyPart.EquipmentDetections.First().Confidence;
+            float coversBodyPartConfidence = bodyPart.EquipmentDetections.First().CoversBodyPart.Confidence;
+            float lowestConfidence = bodyPartConfidence;
+
+            if (lowestConfidence > equipamentDetectedConfidence) lowestConfidence = equipamentDetectedConfidence;
+            if (lowestConfidence > coversBodyPartConfidence) lowestConfidence = coversBodyPartConfidence;
+
+            return lowestConfidence;
+        }
+
         #endregion
 
         #region Methods for Print Text/Images
@@ -301,18 +315,19 @@ namespace TCCVerificacaoEPI
                     {
                         foreach (EquipmentDetection equipmentDetection in bodyPart.EquipmentDetections)
                         {
+                            float confidence = LowestConfidence(bodyPart);
                             // Desenha o BoudingBox da EPI
                             if (equipmentDetection.CoversBodyPart.Value)
                             {
                                 // EPI vestido pela pessoa
                                 MyDrawRectangle(coveredBodyPartPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
-                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, coveredBodyPartPen.Color);
+                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, confidence, coveredBodyPartPen.Color);
                             }
                             else
                             {
                                 // EPI NÃO vestido pela pessoa
                                 MyDrawRectangle(equipamentPen, graphics, equipmentDetection.BoundingBox, bitmap.Size);
-                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, equipmentDetection.Confidence, equipamentPen.Color);
+                                DrawConfidence(graphics, equipmentDetection.BoundingBox, bitmap.Size, confidence, equipamentPen.Color);
                             } 
                         }
                     }
