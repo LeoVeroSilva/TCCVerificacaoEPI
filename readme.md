@@ -2,7 +2,7 @@
 
 ## TO-DOS
 
-- Link/anexo do trabalho finald
+- Link/anexo do trabalho final
 - Revisar descrição das aplicações
 - Melhorar imagem da aplicação final
 
@@ -85,6 +85,23 @@ Para gestão dos dispositivos de captura (por exemplo, câmeras) e captura de fr
 - **AForge.Video.DirectShow**
 
 Para mais detalhes de como instalar o AWSSDK com NuGet, conferir em [Instale pacotes AWSSDK com o NuGet].
+
+## Bancos de Imagens
+
+Foram utilizados bancos de imagens disponíveis na plataforma Kaggle e Roboflow. Segue o link dos bancos utilizados:
+
+### Kaggle
+- [COVID-19 PPE Dataset for Object Detection](https://www.kaggle.com/datasets/ialimustufa/object-detection-for-ppe-covid19-dataset)
+- [Gloves Dataset | Covid Safety Wear](https://www.kaggle.com/datasets/dataclusterlabs/gloves-dataset-covid-safety-wear)
+- [Construction Site Safety Image Dataset](https://www.kaggle.com/datasets/snehilsanyal/construction-site-safety-image-dataset-roboflow)
+- [PPE Detection](https://www.kaggle.com/datasets/mustafatayyipbayram/ppe-detection)
+- [Detecting Helmets](https://www.kaggle.com/datasets/sakshamjn/detecting-helmets4-types-cisf-normal-person)
+- [Safety Helmet Detection](https://www.kaggle.com/datasets/andrewmvd/hard-hat-detection)
+
+### Roboflow
+- [Hard Hat Workers Dataset](https://public.roboflow.com/object-detection/hard-hat-workers)
+- [Mask Wearing Dataset](https://public.roboflow.com/object-detection/mask-wearing)
+- [Construction Safety](https://universe.roboflow.com/roboflow-100/construction-safety-gsnvb)
 
 ## Informações Adicionais
 
