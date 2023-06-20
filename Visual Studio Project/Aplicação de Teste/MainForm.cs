@@ -166,7 +166,7 @@ namespace TCCVerificacaoEPI
             }
             foreach (int person in DetectPPEResponse.Summary.PersonsIndeterminate)
             {
-                validationMsg += string.Format("Pessoa: {0} é ideterminável\n", person);
+                validationMsg += string.Format("Pessoa: {0} é indeterminável\n", person);
             }
             rtbResponseValidation.Text = validationMsg;
         }
