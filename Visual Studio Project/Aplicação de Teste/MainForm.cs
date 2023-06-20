@@ -158,11 +158,11 @@ namespace TCCVerificacaoEPI
             string validationMsg = "";
             foreach (int person in DetectPPEResponse.Summary.PersonsWithRequiredEquipment)
             {
-                validationMsg += string.Format("Pessoa: {0} Autorizadad\n", person);
+                validationMsg += string.Format("Pessoa: {0} Autorizado\n", person);
             }
             foreach (int person in DetectPPEResponse.Summary.PersonsWithoutRequiredEquipment)
             {
-                validationMsg += string.Format("Pessoa: {0} NÃO Autorizadad\n", person);
+                validationMsg += string.Format("Pessoa: {0} NÃO Autorizado\n", person);
             }
             foreach (int person in DetectPPEResponse.Summary.PersonsIndeterminate)
             {
